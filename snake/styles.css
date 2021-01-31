@@ -1,0 +1,33 @@
+body {
+    background-color: grey;
+}
+
+.field {
+    margin: auto;
+    height: 480px;
+    width: 480px;
+    position: relative;
+}
+
+.rowContainer {
+    position: relative;
+    width: 480px;
+    height: 40px;
+}
+
+.row {
+    position: absolute;
+    height: fit-content;
+    width: fit-content;
+
+}
+
+.tile {
+    float: left;
+    margin: 5px;
+    border-radius: 5px;
+    height: 30px;
+    width: 30px;
+    position: relative;
+    background-color: white;
+}

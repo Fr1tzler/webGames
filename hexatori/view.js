@@ -1,4 +1,8 @@
 function main() {
+    resizeAll();
+}
+
+function resizeAll() {
     resizeField();
 }
 
@@ -15,5 +19,9 @@ function resizeField() {
     }
 }
 
+function resizeTiles() {
+
+}
+
 document.addEventListener("DOMContentLoaded", main);
-window.addEventListener("resize", resizeField);
+window.addEventListener("resize", resizeAll);
