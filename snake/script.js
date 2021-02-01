@@ -9,6 +9,8 @@ let map = generateMap();
 let gameEnd = false;
 let viewTimer;
 let modelTimer;
+const deltaTime = 200;
+
 
 function generateMap() {
     let map = []
@@ -94,7 +96,7 @@ function update() {
     nextState();
     drawMap();
     if (!gameEnd) {
-        viewTimer = setTimeout(update, 50);
+        viewTimer = setTimeout(update, deltaTime);
     }
 }
 
@@ -150,3 +152,19 @@ function generateTiles() {
 }
 
 document.addEventListener("DOMContentLoaded", main);
+document.addEventListener("keydown", function (event) {
+    switch (event.code) {
+        case "ArrowDown":
+            direction = "down";
+            break;
+        case "ArrowUp":
+            direction = "up";
+            break;
+        case "ArrowLeft":
+            direction = "left";
+            break;
+        case "ArrowRight":
+            direction = "right";
+            break;    
+        }
+});

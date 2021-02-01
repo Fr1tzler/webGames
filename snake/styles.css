@@ -30,4 +30,5 @@ body {
     width: 30px;
     position: relative;
     background-color: white;
+    transition: all ease 0.1s;
 }
