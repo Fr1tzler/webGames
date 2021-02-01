@@ -126,3 +126,27 @@ body {
     width: 100vw;
     height: 100vw;
 }
+
+.controlsContainer {
+    position: absolute;
+    left: 10vh;
+    bottom: 10vh;
+    width: 20vh;
+    height: 20vh;
+    transform: rotate(45deg) translateY(-50%);
+    overflow: hidden;
+}
+
+.controlButton {
+    background-color: #666666;
+    position: relative;
+    float: left;
+    border-radius: 5px;
+    width: 8vh;
+    height: 8vh;
+    margin: 1vh;
+}
+
+.controlButton:active {
+    background-color: white;
+}

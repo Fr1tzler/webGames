@@ -10,7 +10,6 @@ let timer;
 let deltaTime;
 let gamePaused = false;
 
-
 function generateMap() {
     let map = []
     for (let y = 0; y < mapSize; y++) {
@@ -85,22 +84,13 @@ function getRandomInt(upperBound) {
 
 function main() {
     // REFACTOR ASAP
-    document.getElementById("size12").addEventListener("click", function () {
-        mapSize = 12;
-    });
-    document.getElementById("size18").addEventListener("click", function () {
-        mapSize = 18;
-    });
-    document.getElementById("size24").addEventListener("click", function () {
-        mapSize = 24;
-    });
-    document.getElementById("size32").addEventListener("click", function () {
-        mapSize = 32;
-    });
+    document.getElementById("size12").addEventListener("click", function () {mapSize = 12;});
+    document.getElementById("size18").addEventListener("click", function () {mapSize = 18;});
+    document.getElementById("size24").addEventListener("click", function () {mapSize = 24;});
+    document.getElementById("size32").addEventListener("click", function () {mapSize = 32;});
     document.getElementById("startNewGame").addEventListener("click", newGame);
 
-    foo();
-
+    enableControls();
     deltaTime = 100;
     generateTiles();
     resizeMap()
@@ -212,29 +202,56 @@ function newGame() {
     update();
 }
 
+function moveUp() {
+    if (direction == "down") {
+        return;
+    }
+    direction = "up";
+}
+
+function moveDown() {
+    if (direction == "up") {
+        return;
+    }
+    direction = "down";
+}
+
+function moveLeft() {
+    if (direction == "right") {
+        return;
+    }
+    direction = "left";
+}
+
+function moveRight() {
+    if (direction == "left") {
+        return;
+    }
+    direction = "right";
+}
+
+function enableControls() {
+    document.getElementById("btnUp").addEventListener("click", moveUp);
+    document.getElementById("btnDown").addEventListener("click", moveDown);
+    document.getElementById("btnLeft").addEventListener("click", moveLeft);
+    document.getElementById("btnRight").addEventListener("click", moveRight);    
+}
+
 document.addEventListener("DOMContentLoaded", main);
 window.addEventListener("resize", resizeMap);
 document.addEventListener("keydown", function (event) {
     switch (event.code) {
         case "ArrowDown":
-            if (direction == "up")
-                break;
-            direction = "down";
+            moveDown();
             break;
         case "ArrowUp":
-            if (direction == "down")
-                break;
-            direction = "up";
+            moveUp();
             break;
         case "ArrowLeft":
-            if (direction == "right")
-                break;
-            direction = "left";
+            moveLeft();
             break;
         case "ArrowRight":
-            if (direction == "left")
-                break;
-            direction = "right";
+            moveRight();
             break;    
         case "KeyP":
             pauseClicked();
@@ -243,63 +260,3 @@ document.addEventListener("keydown", function (event) {
             break;
         }
 });
-
-
-function foo() {
-    
-
-    var detector = document.getElementById("swipeDetector")
-
-    detector.addEventListener("touchstart", startTouch, false);
-    detector.addEventListener("touchmove", moveTouch, false);
-
-    // Swipe Up / Down / Left / Right
-    var initialX = null;
-    var initialY = null;
-
-    function startTouch(e) {
-    initialX = e.touches[0].clientX;
-    initialY = e.touches[0].clientY;
-    };
-
-    function moveTouch(e) {
-        if (initialX === null) {
-            return;
-        }
-
-        if (initialY === null) {
-            return;
-        }
-
-        var currentX = e.touches[0].clientX;
-        var currentY = e.touches[0].clientY;
-
-        var diffX = initialX - currentX;
-        var diffY = initialY - currentY;
-
-        if (Math.abs(diffX) > Math.abs(diffY)) {
-            // sliding horizontally
-            if (diffX > 0) {
-                // swiped left
-                console.log("swiped left");
-            } else {
-                // swiped right
-                console.log("swiped right");
-            }  
-        } else {
-            // sliding vertically
-            if (diffY > 0) {
-                // swiped up
-                console.log("swiped up");
-            } else {
-                // swiped down
-                console.log("swiped down");
-            }  
-        }
-
-        initialX = null;
-        initialY = null;
-
-        e.preventDefault();
-    }
-}
