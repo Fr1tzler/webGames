@@ -89,6 +89,7 @@ function getRandomInt(upperBound) {
 function main() {
     deltaTime = 100;
     generateTiles();
+    resizeMap()
     update();
 }
 
@@ -127,24 +128,38 @@ function drawMap() {
 }
 
 function resizeMap() {
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    let tileSize = Math.min(window / mapWidth, height / mapHeight);
-
-    document.getElementById("field").style.width = 100;
-    document.getElementById("field").style.width = 100;
+    let squareSize = Math.min(window.innerHeight, window.innerWidth) * 0.9;
+    document.getElementById("field").style.height = squareSize + "px";
+    document.getElementById("field").style.width = squareSize + "px";
+    for (let rowId = 0; rowId < mapHeight; rowId++) {
+        document.getElementById("rowContainer_" + rowId.toString()).style.width = Math.floor(squareSize) + "px";
+        document.getElementById("rowContainer_" + rowId.toString()).style.height = Math.floor(squareSize / mapHeight) + "px";
+        document.getElementById("row_" + rowId.toString()).style.width = Math.floor(squareSize) + "px";
+        document.getElementById("row_" + rowId.toString()).style.height = Math.floor(squareSize / mapHeight) + "px";
+        for (let columnId = 0; columnId < mapWidth; columnId++) {
+            tileId = "tile_" + rowId.toString() + "_" + columnId.toString();
+            tile = document.getElementById(tileId);
+            tile.style.width = Math.floor(squareSize / mapWidth * 0.8) + "px";
+            tile.style.height = Math.floor(squareSize / mapHeight * 0.8) + "px";
+            tile.style.marginLeft = Math.floor(squareSize / mapWidth * 0.1) + "px";
+            tile.style.marginRight = Math.floor(squareSize / mapWidth * 0.1) + "px";
+            tile.style.marginTop = Math.floor(squareSize / mapHeight * 0.1) + "px";
+            tile.style.marginBottom = Math.floor(squareSize / mapHeight * 0.1) + "px";
+            
+        }
+    }   
 }
 
 function generateTiles() {
     for (let rowId = 0; rowId < map.length; rowId++) {
         let rowContainer = document.createElement("div");
         rowContainer.className = "rowContainer";
-        rowContainer.id = "rowContainer" + rowId.toString();
+        rowContainer.id = "rowContainer_" + rowId.toString();
         document.getElementById("field").appendChild(rowContainer);
 
         let row = document.createElement("div");
         row.className = "row";
-        row.id = "row" + rowId.toString();
+        row.id = "row_" + rowId.toString();
         rowContainer.appendChild(row);
         for(let columnId = 0; columnId < map[rowId].length; columnId++) {
             let tile = document.createElement("div");
@@ -156,6 +171,7 @@ function generateTiles() {
 }
 
 document.addEventListener("DOMContentLoaded", main);
+window.addEventListener("resize", resizeMap);
 document.addEventListener("keydown", function (event) {
     switch (event.code) {
         case "ArrowDown":
@@ -194,3 +210,4 @@ function pauseClicked() {
         document.getElementById("pause").style.opacity = 0;    
     }
 }
+
