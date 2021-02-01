@@ -1,8 +1,7 @@
 const fruitTile = "f";
 const snakeTile = "s";
 const emptyTile = "e";
-let mapWidth = 12;
-let mapHeight = 12;
+let mapSize = 12;
 let snake = [[0, 0], [0, 1], [0, 2]];
 let direction = "right";
 let map = generateMap();
@@ -14,9 +13,9 @@ let gamePaused = false;
 
 function generateMap() {
     let map = []
-    for (let y = 0; y < mapHeight; y++) {
+    for (let y = 0; y < mapSize; y++) {
         map.push([]);
-        for (let x = 0; x < mapWidth; x++) {
+        for (let x = 0; x < mapSize; x++) {
             map[y].push(emptyTile);
         }
     }
@@ -46,8 +45,8 @@ function nextState() {
             break;
     }
     
-    snakeHeadX = (snakeHeadX + mapWidth) % mapWidth;
-    snakeHeadY = (snakeHeadY + mapHeight) % mapHeight;
+    snakeHeadX = (snakeHeadX + mapSize) % mapSize;
+    snakeHeadY = (snakeHeadY + mapSize) % mapSize;
     switch (map[snakeHeadY][snakeHeadX]) {
         case fruitTile:
             map[snakeHeadY][snakeHeadX] = snakeTile;
@@ -70,8 +69,8 @@ function nextState() {
 // possible infinite loop
 function setNextFruit(map) {
     while (true) {
-        let fruitY = getRandomInt(mapHeight);
-        let fruitX = getRandomInt(mapWidth);
+        let fruitY = getRandomInt(mapSize);
+        let fruitX = getRandomInt(mapSize);
         if (map[fruitY][fruitX] == emptyTile) {
             map[fruitY][fruitX] = fruitTile;
             break;
@@ -87,24 +86,18 @@ function getRandomInt(upperBound) {
 function main() {
     // REFACTOR ASAP
     document.getElementById("size12").addEventListener("click", function () {
-        mapHeight = 12;
-        mapWidth = 12;
+        mapSize = 12;
     });
     document.getElementById("size18").addEventListener("click", function () {
-        mapHeight = 18;
-        mapWidth = 18;
+        mapSize = 18;
     });
     document.getElementById("size24").addEventListener("click", function () {
-        mapHeight = 24;
-        mapWidth = 24;
+        mapSize = 24;
     });
     document.getElementById("size32").addEventListener("click", function () {
-        mapHeight = 32;
-        mapWidth = 32;
+        mapSize = 32;
     });
     document.getElementById("startNewGame").addEventListener("click", newGame);
-    
-
 
     deltaTime = 100;
     generateTiles();
@@ -122,13 +115,13 @@ function update() {
     }
     nextState();
     drawMap();
-    deltaTime = 100 * (mapWidth * mapHeight - snake.length) / (mapWidth * mapHeight);
+    deltaTime = 100 * (Math.pow(mapSize, 2) - snake.length) / Math.pow(mapSize, 2);
     timer = setTimeout(update, deltaTime);    
 }
 
 function drawMap() {
-    for (let y = 0; y < mapHeight; y++) {
-        for (let x = 0; x < mapWidth; x++) {
+    for (let y = 0; y < mapSize; y++) {
+        for (let x = 0; x < mapSize; x++) {
             let color = "grey";
             switch (map[y][x]) {
                 case fruitTile:
@@ -151,27 +144,27 @@ function resizeMap() {
     let squareSize = Math.min(window.innerHeight, window.innerWidth) * 0.9;
     document.getElementById("field").style.height = squareSize + "px";
     document.getElementById("field").style.width = squareSize + "px";
-    for (let rowId = 0; rowId < mapHeight; rowId++) {
+    for (let rowId = 0; rowId < mapSize; rowId++) {
         document.getElementById("rowContainer_" + rowId.toString()).style.width = Math.floor(squareSize) + "px";
-        document.getElementById("rowContainer_" + rowId.toString()).style.height = Math.floor(squareSize / mapHeight) + "px";
+        document.getElementById("rowContainer_" + rowId.toString()).style.height = Math.floor(squareSize / mapSize) + "px";
         document.getElementById("row_" + rowId.toString()).style.width = Math.floor(squareSize) + "px";
-        document.getElementById("row_" + rowId.toString()).style.height = Math.floor(squareSize / mapHeight) + "px";
-        for (let columnId = 0; columnId < mapWidth; columnId++) {
+        document.getElementById("row_" + rowId.toString()).style.height = Math.floor(squareSize / mapSize) + "px";
+        for (let columnId = 0; columnId < mapSize; columnId++) {
             tileId = "tile_" + rowId.toString() + "_" + columnId.toString();
             tile = document.getElementById(tileId);
-            tile.style.width = Math.floor(squareSize / mapWidth * 0.8) + "px";
-            tile.style.height = Math.floor(squareSize / mapHeight * 0.8) + "px";
-            tile.style.marginLeft = Math.floor(squareSize / mapWidth * 0.1) + "px";
-            tile.style.marginRight = Math.floor(squareSize / mapWidth * 0.1) + "px";
-            tile.style.marginTop = Math.floor(squareSize / mapHeight * 0.1) + "px";
-            tile.style.marginBottom = Math.floor(squareSize / mapHeight * 0.1) + "px";
+            tile.style.width = Math.floor(squareSize / mapSize * 0.8) + "px";
+            tile.style.height = Math.floor(squareSize / mapSize * 0.8) + "px";
+            tile.style.marginLeft = Math.floor(squareSize / mapSize * 0.1) + "px";
+            tile.style.marginRight = Math.floor(squareSize / mapSize * 0.1) + "px";
+            tile.style.marginTop = Math.floor(squareSize / mapSize * 0.1) + "px";
+            tile.style.marginBottom = Math.floor(squareSize / mapSize * 0.1) + "px";
             
         }
     }   
 }
 
 function generateTiles() {
-    for (let rowId = 0; rowId < mapHeight; rowId++) {
+    for (let rowId = 0; rowId < mapSize; rowId++) {
         let rowContainer = document.createElement("div");
         rowContainer.className = "rowContainer";
         rowContainer.id = "rowContainer_" + rowId.toString();
@@ -181,7 +174,7 @@ function generateTiles() {
         row.className = "row";
         row.id = "row_" + rowId.toString();
         rowContainer.appendChild(row);
-        for(let columnId = 0; columnId < mapWidth; columnId++) {
+        for(let columnId = 0; columnId < mapSize; columnId++) {
             let tile = document.createElement("div");
             tile.className = "tile";
             tile.id = "tile_" + rowId.toString() + "_" + columnId.toString();
