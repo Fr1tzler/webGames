@@ -9,7 +9,7 @@ let map = generateMap();
 let gameEnd = false;
 let viewTimer;
 let modelTimer;
-const deltaTime = 200;
+let deltaTime;
 
 
 function generateMap() {
@@ -31,8 +31,6 @@ function generateMap() {
 function nextState() {
     let snakeHeadY = snake[snake.length - 1][0];
     let snakeHeadX = snake[snake.length - 1][1];
-    console.log(snakeHeadX);
-    console.log(snakeHeadY);
     switch (direction) {
         case "right":
             snakeHeadX += 1;
@@ -65,7 +63,6 @@ function nextState() {
             snake.push([snakeHeadY, snakeHeadX]);
             let snakeEnd = snake.shift();
             map[snakeEnd[0]][snakeEnd[1]] = emptyTile;
-            console.log(snake);
             break;
     }
 }
@@ -88,6 +85,7 @@ function getRandomInt(upperBound) {
 }
 
 function main() {
+    deltaTime = 100;
     generateTiles();
     update();
 }
@@ -96,21 +94,22 @@ function update() {
     nextState();
     drawMap();
     if (!gameEnd) {
+        console.log(deltaTime);
+        deltaTime = 100 * (mapWidth * mapHeight - snake.length) / (mapWidth * mapHeight);
         viewTimer = setTimeout(update, deltaTime);
     }
 }
 
 function drawMap() {
-    console.log(map[0][0]);
     for (let y = 0; y < mapHeight; y++) {
         for (let x = 0; x < mapWidth; x++) {
-            let color = "white";
+            let color = "grey";
             switch (map[y][x]) {
                 case fruitTile:
-                    color = "yellow";
+                    color = "white";
                     break;
                 case snakeTile:
-                    color = "green";
+                    color = "white";
                     break;
                 case emptyTile:
                     break;

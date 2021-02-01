@@ -1,5 +1,5 @@
 body {
-    background-color: grey;
+    background-color: #555555;
 }
 
 .field {
@@ -29,6 +29,6 @@ body {
     height: 30px;
     width: 30px;
     position: relative;
-    background-color: white;
-    transition: all ease 0.1s;
+    background-color: grey;
+    transition: all ease 0.05s;
 }
