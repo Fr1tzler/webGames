@@ -58,7 +58,7 @@ function nextState() {
             break;
         case snakeTile:
             gameEnd = true;
-            alert("FAIL");
+            gameEnded();
             break;
         case emptyTile:
             map[snakeHeadY][snakeHeadX] = snakeTile;
@@ -211,3 +211,13 @@ function pauseClicked() {
     }
 }
 
+function gameEnded() {
+    console.log("game lost");
+    document.getElementById("gameEnd").style.opacity = 1;
+
+}
+
+function newGame() {
+    console.log("newGame");
+    document.getElementById("gameEnd").style.opacity = 0;
+}
