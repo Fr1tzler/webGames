@@ -78,3 +78,43 @@ body {
     opacity: 0;
     transition: all ease 0.3s;
 }
+
+.gameEndMenu {
+    position: relative;
+    border-radius: 5px;
+    text-align: center;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: 50vh;
+    padding: 1%;
+}
+
+.newGameOptions {
+    margin: 5vh;
+}
+
+.customButton {
+    user-select: none;
+    background-color: white;
+    border: 1px solid #666666;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    transition: 0.3s all ease;
+}
+
+.customButton:hover {
+    background-color: #999999;
+}
+
+.sizeButton {
+    font-size: x-large;
+}
+
+.startButton {
+    font-size: xx-large;
+    font-weight: bolder;
+}

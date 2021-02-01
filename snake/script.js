@@ -7,8 +7,7 @@ let snake = [[0, 0], [0, 1], [0, 2]];
 let direction = "right";
 let map = generateMap();
 let gameEnd = false;
-let viewTimer;
-let modelTimer;
+let timer;
 let deltaTime;
 let gamePaused = false;
 
@@ -68,7 +67,6 @@ function nextState() {
             break;
     }
 }
-
 // possible infinite loop
 function setNextFruit(map) {
     while (true) {
@@ -87,6 +85,27 @@ function getRandomInt(upperBound) {
 }
 
 function main() {
+    // REFACTOR ASAP
+    document.getElementById("size12").addEventListener("click", function () {
+        mapHeight = 12;
+        mapWidth = 12;
+    });
+    document.getElementById("size18").addEventListener("click", function () {
+        mapHeight = 18;
+        mapWidth = 18;
+    });
+    document.getElementById("size24").addEventListener("click", function () {
+        mapHeight = 24;
+        mapWidth = 24;
+    });
+    document.getElementById("size32").addEventListener("click", function () {
+        mapHeight = 32;
+        mapWidth = 32;
+    });
+    document.getElementById("startNewGame").addEventListener("click", newGame);
+    
+
+
     deltaTime = 100;
     generateTiles();
     resizeMap()
@@ -94,16 +113,17 @@ function main() {
 }
 
 function update() {
+    if (gameEnd) {
+        return;
+    }
     if (gamePaused) {
-        viewTimer = setTimeout(update, 50);
+        timer = setTimeout(update, 50);
         return;
     }
     nextState();
     drawMap();
-    if (!gameEnd) {
-        deltaTime = 100 * (mapWidth * mapHeight - snake.length) / (mapWidth * mapHeight);
-        viewTimer = setTimeout(update, deltaTime);
-    }
+    deltaTime = 100 * (mapWidth * mapHeight - snake.length) / (mapWidth * mapHeight);
+    timer = setTimeout(update, deltaTime);    
 }
 
 function drawMap() {
@@ -151,7 +171,7 @@ function resizeMap() {
 }
 
 function generateTiles() {
-    for (let rowId = 0; rowId < map.length; rowId++) {
+    for (let rowId = 0; rowId < mapHeight; rowId++) {
         let rowContainer = document.createElement("div");
         rowContainer.className = "rowContainer";
         rowContainer.id = "rowContainer_" + rowId.toString();
@@ -161,13 +181,40 @@ function generateTiles() {
         row.className = "row";
         row.id = "row_" + rowId.toString();
         rowContainer.appendChild(row);
-        for(let columnId = 0; columnId < map[rowId].length; columnId++) {
+        for(let columnId = 0; columnId < mapWidth; columnId++) {
             let tile = document.createElement("div");
             tile.className = "tile";
             tile.id = "tile_" + rowId.toString() + "_" + columnId.toString();
             row.appendChild(tile);
         }
     }
+}
+
+function pauseClicked() {
+    gamePaused = !gamePaused;
+    if (gamePaused) {
+        document.getElementById("pause").style.opacity = 1;
+    } else {
+        document.getElementById("pause").style.opacity = 0;    
+    }
+}
+
+function gameEnded() {
+    console.log("game lost");
+    document.getElementById("gameEnd").style.opacity = 1;
+
+}
+
+function newGame() {
+    document.getElementById("gameEnd").style.opacity = 0;
+    document.getElementById("field").innerHTML = "";
+    gameEnd = false;
+    direction = "right";
+    snake = [[0, 0], [0, 1], [0, 2]];
+    map = generateMap();
+    generateTiles();
+    resizeMap()
+    update();
 }
 
 document.addEventListener("DOMContentLoaded", main);
@@ -201,23 +248,3 @@ document.addEventListener("keydown", function (event) {
             break;
         }
 });
-
-function pauseClicked() {
-    gamePaused = !gamePaused;
-    if (gamePaused) {
-        document.getElementById("pause").style.opacity = 1;
-    } else {
-        document.getElementById("pause").style.opacity = 0;    
-    }
-}
-
-function gameEnded() {
-    console.log("game lost");
-    document.getElementById("gameEnd").style.opacity = 1;
-
-}
-
-function newGame() {
-    console.log("newGame");
-    document.getElementById("gameEnd").style.opacity = 0;
-}
