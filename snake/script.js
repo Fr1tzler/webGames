@@ -5,11 +5,11 @@ let mapWidth = 12;
 let mapHeight = 12;
 let snake = [[0, 0], [0, 1], [0, 2]];
 let direction = "right";
-let map;
-let snakeLength = 3;
+let map = generateMap();
 let gameEnd = false;
 
-function generateEmptyMap() {
+
+function generateMap() {
     let map = []
     for (let y = 0; y < mapHeight; y++) {
         map.push([]);
@@ -17,11 +17,16 @@ function generateEmptyMap() {
             map[y].push(emptyTile);
         }
     }
+    for (var snakePieceId = 0; snakePieceId < snake.length; snakePieceId++) {
+        map[snake[snakePieceId][0]][snake[snakePieceId][1]] = snakeTile
+    }
+    setNextFruit(map);
+
     return map;
 }
 
 function nextState() {
-    let snakeHead = snake.slice(snakeLength - 1, snakeLength);
+    let snakeHead = snake.slice(snake.length - 1, snake.length);
     switch (direction) {
         case "right":
             snakeHead[0] += 1;
@@ -36,16 +41,15 @@ function nextState() {
             snakeHead[1] += 1;
             break;
     }
-    
+
     snakeHead[0] = (snakeHead[0] + mapWidth) % mapWidth;
     snakeHead[1] = (snakeHead[1] + mapHeight) % mapHeight;
     
     switch (map[snakeHead[0]][snakeHead[1]]) {
         case fruitTile:
             snake.push(snakeHead)
-            snakeLength++;
             map[snakeHead[0]][snakeHead[1]] = snakeTile;
-            setNextFruit();
+            map = setNextFruit(map);
             break;
         case snakeTile:
             gameEnd = true;
@@ -62,7 +66,7 @@ function nextState() {
 }
 
 // possible infinite loop
-function setNextFruit() {
+function setNextFruit(map) {
     while (true) {
         let fruitY = getRandomInt(mapHeight);
         let fruitX = getRandomInt(mapWidth);
@@ -71,8 +75,31 @@ function setNextFruit() {
             break;
         }
     }
+    return map;
 }
 
 function getRandomInt(upperBound) {
     return Math.floor(Math.random() * upperBound);
 }
+
+function main() {
+    for (let rowId = 0; rowId < map.length; rowId++) {
+        let rowContainer = document.createElement("div");
+        rowContainer.className = "rowContainer";
+        rowContainer.id = "rowContainer" + rowId.toString();
+        document.getElementById("field").appendChild(rowContainer);
+
+        let row = document.createElement("div");
+        row.className = "row";
+        row.id = "row" + rowId.toString();
+        rowContainer.appendChild(row);
+        for(let columnId = 0; columnId < map[rowId].length; columnId++) {
+            let tile = document.createElement("div");
+            tile.className = "tile";
+            tile.id = "tile_" + rowId.toString() + "_" + columnId.toString();
+            row.appendChild(tile);
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", main);
