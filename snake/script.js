@@ -7,7 +7,8 @@ let snake = [[0, 0], [0, 1], [0, 2]];
 let direction = "right";
 let map = generateMap();
 let gameEnd = false;
-
+let viewTimer;
+let modelTimer;
 
 function generateMap() {
     let map = []
@@ -26,29 +27,31 @@ function generateMap() {
 }
 
 function nextState() {
-    let snakeHead = snake.slice(snake.length - 1, snake.length);
+    let snakeHeadY = snake[snake.length - 1][0];
+    let snakeHeadX = snake[snake.length - 1][1];
+    console.log(snakeHeadX);
+    console.log(snakeHeadY);
     switch (direction) {
         case "right":
-            snakeHead[0] += 1;
+            snakeHeadX += 1;
             break;
         case "left":
-            snakeHead[0] -= 1;
+            snakeHeadX -= 1;
             break;
         case "up":
-            snakeHead[1] -= 1;
+            snakeHeadY -= 1;
             break;
         case "down":
-            snakeHead[1] += 1;
+            snakeHeadY += 1;
             break;
     }
-
-    snakeHead[0] = (snakeHead[0] + mapWidth) % mapWidth;
-    snakeHead[1] = (snakeHead[1] + mapHeight) % mapHeight;
     
-    switch (map[snakeHead[0]][snakeHead[1]]) {
+    snakeHeadX = (snakeHeadX + mapWidth) % mapWidth;
+    snakeHeadY = (snakeHeadY + mapHeight) % mapHeight;
+    switch (map[snakeHeadY][snakeHeadX]) {
         case fruitTile:
-            snake.push(snakeHead)
-            map[snakeHead[0]][snakeHead[1]] = snakeTile;
+            map[snakeHeadY][snakeHeadX] = snakeTile;
+            snake.push([snakeHeadY, snakeHeadX]);
             map = setNextFruit(map);
             break;
         case snakeTile:
@@ -56,12 +59,12 @@ function nextState() {
             alert("FAIL");
             break;
         case emptyTile:
-            map[snakeHead[0]][snakeHead[1]] = snakeTile;
-            snake.push(snakeHead)
-            snake.shift()
+            map[snakeHeadY][snakeHeadX] = snakeTile;
+            snake.push([snakeHeadY, snakeHeadX]);
+            let snakeEnd = snake.shift();
+            map[snakeEnd[0]][snakeEnd[1]] = emptyTile;
+            console.log(snake);
             break;
-    }
-    if (!gameEnd) {
     }
 }
 
@@ -83,6 +86,50 @@ function getRandomInt(upperBound) {
 }
 
 function main() {
+    generateTiles();
+    update();
+}
+
+function update() {
+    nextState();
+    drawMap();
+    if (!gameEnd) {
+        viewTimer = setTimeout(update, 50);
+    }
+}
+
+function drawMap() {
+    console.log(map[0][0]);
+    for (let y = 0; y < mapHeight; y++) {
+        for (let x = 0; x < mapWidth; x++) {
+            let color = "white";
+            switch (map[y][x]) {
+                case fruitTile:
+                    color = "yellow";
+                    break;
+                case snakeTile:
+                    color = "green";
+                    break;
+                case emptyTile:
+                    break;
+                default:
+                    break;
+            }
+            document.getElementById("tile_" + y.toString() + "_" + x.toString()).style.backgroundColor = color;
+        }
+    }
+}
+
+function resizeMap() {
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let tileSize = Math.min(window / mapWidth, height / mapHeight);
+
+    document.getElementById("field").style.width = 100;
+    document.getElementById("field").style.width = 100;
+}
+
+function generateTiles() {
     for (let rowId = 0; rowId < map.length; rowId++) {
         let rowContainer = document.createElement("div");
         rowContainer.className = "rowContainer";
