@@ -129,11 +129,11 @@ body {
 
 .controlsContainer {
     position: absolute;
-    left: 10vh;
-    bottom: 10vh;
+    left: 0;
+    top: 0;
     width: 20vh;
     height: 20vh;
-    transform: rotate(45deg) translateY(-50%);
+    transform: translate(-50%, -50%) rotate(45deg) ;
     overflow: hidden;
 }
 

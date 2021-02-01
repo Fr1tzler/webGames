@@ -237,6 +237,29 @@ function enableControls() {
     document.getElementById("btnRight").addEventListener("click", moveRight);    
 }
 
+function resizeControls() {
+    let maxXSize = Math.floor((window.innerWidth - window.innerHeight) / 2);
+    let maxYSize = Math.floor(window.innerHeight);
+    let controlBlockSize = Math.floor(Math.min(maxXSize, maxYSize) / Math.sqrt(2));
+    let buttonSize = Math.floor(controlBlockSize * 0.8 / 2);
+    let buttonMargin = Math.floor(controlBlockSize * 0.1 / 2);
+    let buttonBlockXPosition = Math.floor(maxXSize / 2);
+    let buttonBlockYPosition = Math.floor(maxYSize / 2);
+    let buttonBlock = document.getElementById("btnBlock");
+    buttonBlock.style.top = buttonBlockYPosition + "px";
+    buttonBlock.style.left = buttonBlockXPosition + "px";
+    buttonBlock.style.height = controlBlockSize + "px";
+    buttonBlock.style.width = controlBlockSize + "px";
+    
+    let controlButtons = document.getElementsByClassName("controlButton");
+    for (let i = 0; i < controlButtons.length; i++) {
+        let button = controlButtons[i];
+        button.style.width = buttonSize + "px";
+        button.style.height = buttonSize + "px";
+        button.style.margin = buttonMargin + "px"; 
+    }
+}
+
 document.addEventListener("DOMContentLoaded", main);
 window.addEventListener("resize", resizeMap);
 document.addEventListener("keydown", function (event) {
