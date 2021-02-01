@@ -10,6 +10,7 @@ let gameEnd = false;
 let viewTimer;
 let modelTimer;
 let deltaTime;
+let gamePaused = false;
 
 
 function generateMap() {
@@ -53,6 +54,7 @@ function nextState() {
             map[snakeHeadY][snakeHeadX] = snakeTile;
             snake.push([snakeHeadY, snakeHeadX]);
             map = setNextFruit(map);
+            document.getElementById("score").innerText = "score: " + snake.length.toString();
             break;
         case snakeTile:
             gameEnd = true;
@@ -91,10 +93,13 @@ function main() {
 }
 
 function update() {
+    if (gamePaused) {
+        viewTimer = setTimeout(update, 50);
+        return;
+    }
     nextState();
     drawMap();
     if (!gameEnd) {
-        console.log(deltaTime);
         deltaTime = 100 * (mapWidth * mapHeight - snake.length) / (mapWidth * mapHeight);
         viewTimer = setTimeout(update, deltaTime);
     }
@@ -173,5 +178,19 @@ document.addEventListener("keydown", function (event) {
                 break;
             direction = "right";
             break;    
+        case "KeyP":
+            pauseClicked();
+            break;
+        default:
+            break;
         }
 });
+
+function pauseClicked() {
+    gamePaused = !gamePaused;
+    if (gamePaused) {
+        document.getElementById("pause").style.opacity = 1;
+    } else {
+        document.getElementById("pause").style.opacity = 0;    
+    }
+}
