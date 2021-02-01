@@ -154,15 +154,23 @@ document.addEventListener("DOMContentLoaded", main);
 document.addEventListener("keydown", function (event) {
     switch (event.code) {
         case "ArrowDown":
+            if (direction == "up")
+                break;
             direction = "down";
             break;
         case "ArrowUp":
+            if (direction == "down")
+                break;
             direction = "up";
             break;
         case "ArrowLeft":
+            if (direction == "right")
+                break;
             direction = "left";
             break;
         case "ArrowRight":
+            if (direction == "left")
+                break;
             direction = "right";
             break;    
         }
