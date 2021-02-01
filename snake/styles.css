@@ -133,7 +133,7 @@ body {
     top: 0;
     width: 20vh;
     height: 20vh;
-    transform: translate(-50%, -50%) rotate(45deg) ;
+    transform: translate(-50%, -50%) rotate(45deg);
     overflow: hidden;
 }
 

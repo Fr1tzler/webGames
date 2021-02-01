@@ -7,6 +7,7 @@ let direction = "right";
 let map = generateMap();
 let gameEnd = false;
 let timer;
+const deltaTimeBase = 300;
 let deltaTime;
 let gamePaused = false;
 
@@ -90,8 +91,13 @@ function main() {
     document.getElementById("size32").addEventListener("click", function () {mapSize = 32;});
     document.getElementById("startNewGame").addEventListener("click", newGame);
 
+    if (!isMobileDevice()) {
+        document.getElementById("btnBlock").style.visibility = "hidden";
+    }
+
     enableControls();
-    deltaTime = 100;
+    resizeControls();
+    deltaTime = deltaTimeBase;
     generateTiles();
     resizeMap()
     update();
@@ -107,7 +113,7 @@ function update() {
     }
     nextState();
     drawMap();
-    deltaTime = 100 * (Math.pow(mapSize, 2) - snake.length) / Math.pow(mapSize, 2);
+    deltaTime = deltaTimeBase * (Math.pow(mapSize, 2) - snake.length) / Math.pow(mapSize, 2);
     timer = setTimeout(update, deltaTime);    
 }
 
@@ -260,8 +266,17 @@ function resizeControls() {
     }
 }
 
+function resizeAll() {
+    resizeMap();
+    resizeControls();
+}
+
+function isMobileDevice() {
+    return navigator.maxTouchPoints != 0;
+}
+
 document.addEventListener("DOMContentLoaded", main);
-window.addEventListener("resize", resizeMap);
+window.addEventListener("resize", resizeAll);
 document.addEventListener("keydown", function (event) {
     switch (event.code) {
         case "ArrowDown":
