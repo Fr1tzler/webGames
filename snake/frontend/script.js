@@ -222,28 +222,28 @@ function newGame() {
 }
 
 function moveUp() {
-    if (directionQueue[0] == "up" || direction == "down") {
+    if (directionQueue[0] == "up" || direction == "down" || pauseClicked) {
         return;
     }
     directionQueue.unshift("up");
 }
 
 function moveDown() {
-    if (directionQueue[0] == "down" || direction == "up") {
+    if (directionQueue[0] == "down" || direction == "up" || pauseClicked) {
         return;
     }
     directionQueue.unshift("down");
 }
 
 function moveLeft() {
-    if (directionQueue[0] == "left" || direction == "right") {
+    if (directionQueue[0] == "left" || direction == "right" || pauseClicked) {
         return;
     }
     directionQueue.unshift("left");
 }
 
 function moveRight() {
-    if (directionQueue[0] == "right" || direction == "left") {
+    if (directionQueue[0] == "right" || direction == "left" || pauseClicked) {
         return;
     }
     directionQueue.unshift("right");
@@ -293,18 +293,33 @@ window.addEventListener("resize", resizeAll);
 document.addEventListener("keydown", function (event) {
     switch (event.code) {
         case "ArrowDown":
+            if (event.repeat) {
+                return;
+            }
             moveDown();
             break;
         case "ArrowUp":
+            if (event.repeat) {
+                return;
+            }
             moveUp();
             break;
         case "ArrowLeft":
+            if (event.repeat) {
+                return;
+            }
             moveLeft();
             break;
         case "ArrowRight":
+            if (event.repeat) {
+                return;
+            }
             moveRight();
             break;    
         case "KeyP":
+            if (event.repeat) {
+                return;
+            }
             pauseClicked();
             break;
         default:
