@@ -154,6 +154,11 @@ body {
 }
 
 #pauseButton {
-    background-color: yellow;
+    position: absolute;
+    background-color: rgb(0, 255, 0);
     visibility: hidden;
+    width: 20vh;
+    height: 20vh;
+    top: 1vh;
+    right: 1vh;
 }

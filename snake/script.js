@@ -19,8 +19,8 @@ function generateMap() {
             map[y].push(emptyTile);
         }
     }
-    for (var snakePieceId = 0; snakePieceId < snake.length; snakePieceId++) {
-        map[snake[snakePieceId][0]][snake[snakePieceId][1]] = snakeTile
+    for (var snakeTileId = 0; snakeTileId < snake.length; snakeTileId++) {
+        map[snake[snakeTileId][0]][snake[snakeTileId][1]] = snakeTile
     }
     setNextFruit(map);
 
@@ -44,7 +44,6 @@ function nextState() {
             snakeHeadY += 1;
             break;
     }
-    
     snakeHeadX = (snakeHeadX + mapSize) % mapSize;
     snakeHeadY = (snakeHeadY + mapSize) % mapSize;
     switch (map[snakeHeadY][snakeHeadX]) {
@@ -52,7 +51,7 @@ function nextState() {
             map[snakeHeadY][snakeHeadX] = snakeTile;
             snake.push([snakeHeadY, snakeHeadX]);
             map = setNextFruit(map);
-            document.getElementById("score").innerText = "score: " + snake.length.toString();
+            document.getElementById("score").innerText = `score: ${snake.length}`;
             break;
         case snakeTile:
             gameEnd = true;
@@ -133,36 +132,30 @@ function drawMap() {
                 default:
                     break;
             }
-            document.getElementById("tile_" + y.toString() + "_" + x.toString()).style.backgroundColor = color;
+            document.getElementById(`tile_${y}_${x}`).style.backgroundColor = color;
         }
     }
     for (let i = 0; i < snake.length; i++) {
         let tileId = `tile_${snake[i][0]}_${snake[i][1]}`;
         let color = getSnakeTileColor(snake.length, i);
-        console.log(color);
         document.getElementById(tileId).style.backgroundColor = color;
     }
 }
 
 function resizeMap() {
     let squareSize = Math.min(window.innerHeight, window.innerWidth) * 0.9;
-    document.getElementById("field").style.height = squareSize + "px";
-    document.getElementById("field").style.width = squareSize + "px";
+    document.getElementById("field").style.height = `${squareSize}px`;
+    document.getElementById("field").style.width = `${squareSize}px`;
     for (let rowId = 0; rowId < mapSize; rowId++) {
-        document.getElementById("rowContainer_" + rowId.toString()).style.width = Math.floor(squareSize) + "px";
-        document.getElementById("rowContainer_" + rowId.toString()).style.height = Math.floor(squareSize / mapSize) + "px";
-        document.getElementById("row_" + rowId.toString()).style.width = Math.floor(squareSize) + "px";
-        document.getElementById("row_" + rowId.toString()).style.height = Math.floor(squareSize / mapSize) + "px";
+        document.getElementById(`rowContainer_${rowId}`).style.width = Math.floor(squareSize) + "px";
+        document.getElementById(`rowContainer_${rowId}`).style.height = `${Math.floor(squareSize / mapSize)}px`;
+        document.getElementById(`row_${rowId}`).style.width = `${Math.floor(squareSize)}px`;
+        document.getElementById(`row_${rowId}`).style.height = `${Math.floor(squareSize / mapSize)}px`;
         for (let columnId = 0; columnId < mapSize; columnId++) {
-            tileId = "tile_" + rowId.toString() + "_" + columnId.toString();
-            tile = document.getElementById(tileId);
-            tile.style.width = Math.floor(squareSize / mapSize * 0.8) + "px";
-            tile.style.height = Math.floor(squareSize / mapSize * 0.8) + "px";
-            tile.style.marginLeft = Math.floor(squareSize / mapSize * 0.1) + "px";
-            tile.style.marginRight = Math.floor(squareSize / mapSize * 0.1) + "px";
-            tile.style.marginTop = Math.floor(squareSize / mapSize * 0.1) + "px";
-            tile.style.marginBottom = Math.floor(squareSize / mapSize * 0.1) + "px";
-            
+            tile = document.getElementById(`tile_${rowId}_${columnId}`);
+            tile.style.width = `${Math.floor(squareSize / mapSize * 0.8)}px`;
+            tile.style.height = `${Math.floor(squareSize / mapSize * 0.8)}px`;
+            tile.style.margin = `${Math.floor(squareSize / mapSize * 0.1)}px`;
         }
     }   
 }
@@ -171,17 +164,17 @@ function generateTiles() {
     for (let rowId = 0; rowId < mapSize; rowId++) {
         let rowContainer = document.createElement("div");
         rowContainer.className = "rowContainer";
-        rowContainer.id = "rowContainer_" + rowId.toString();
+        rowContainer.id = `rowContainer_${rowId}`;
         document.getElementById("field").appendChild(rowContainer);
 
         let row = document.createElement("div");
         row.className = "row";
-        row.id = "row_" + rowId.toString();
+        row.id = `row_${rowId}`;
         rowContainer.appendChild(row);
         for(let columnId = 0; columnId < mapSize; columnId++) {
             let tile = document.createElement("div");
             tile.className = "tile";
-            tile.id = "tile_" + rowId.toString() + "_" + columnId.toString();
+            tile.id = `tile_${rowId}_${columnId}`;
             row.appendChild(tile);
         }
     }
@@ -189,15 +182,17 @@ function generateTiles() {
 
 function pauseClicked() {
     gamePaused = !gamePaused;
+    let pause = document.getElementById("pause");
     if (gamePaused) {
-        document.getElementById("pause").style.opacity = 1;
+        pause.style.opacity = 1;
+        pause.style.visibility = "visible";
     } else {
-        document.getElementById("pause").style.opacity = 0;    
+        pause.style.opacity = 0;
+        pause.style.visibility = "hidden";
     }
 }
 
 function gameEnded() {
-    console.log("game lost");
     document.getElementById("gameEnd").style.opacity = 1;
     document.getElementById("gameEnd").style.visibility = "visible";
 }
@@ -209,6 +204,7 @@ function newGame() {
     gameEnd = false;
     direction = "right";
     snake = [[0, 0], [0, 1], [0, 2]];
+    deltaTime = deltaTimeBase;
     map = generateMap();
     generateTiles();
     resizeMap()
@@ -259,17 +255,17 @@ function resizeControls() {
     let buttonBlockXPosition = Math.floor(maxXSize / 2);
     let buttonBlockYPosition = Math.floor(maxYSize / 2);
     let buttonBlock = document.getElementById("btnBlock");
-    buttonBlock.style.top = buttonBlockYPosition + "px";
-    buttonBlock.style.left = buttonBlockXPosition + "px";
-    buttonBlock.style.height = controlBlockSize + "px";
-    buttonBlock.style.width = controlBlockSize + "px";
+    buttonBlock.style.top = `${buttonBlockYPosition}px`;
+    buttonBlock.style.left = `${buttonBlockXPosition}px`;
+    buttonBlock.style.height = `${controlBlockSize}px`;
+    buttonBlock.style.width = `${controlBlockSize}px`;
     
     let controlButtons = document.getElementsByClassName("controlButton");
     for (let i = 0; i < controlButtons.length; i++) {
         let button = controlButtons[i];
-        button.style.width = buttonSize + "px";
-        button.style.height = buttonSize + "px";
-        button.style.margin = buttonMargin + "px"; 
+        button.style.width = `${buttonSize}px`;
+        button.style.height = `${buttonSize}px`;
+        button.style.margin = `${buttonMargin}px`; 
     }
 }
 
