@@ -7,7 +7,7 @@ let direction = "right";
 let map = generateMap();
 let gameEnd = false;
 let timer;
-const deltaTimeBase = 300;
+const deltaTimeBase = 200;
 let deltaTime;
 let gamePaused = false;
 
