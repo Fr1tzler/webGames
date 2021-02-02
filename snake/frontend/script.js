@@ -124,7 +124,7 @@ function drawMap() {
             let color = "grey";
             switch (map[y][x]) {
                 case fruitTile:
-                    color = "orangered";
+                    color = "orange";
                     break;
                 case snakeTile:
                     color = "white";
@@ -213,29 +213,36 @@ function newGame() {
     update();
 }
 
+function getCurrentDirection() {
+    let headPosition = snake[snake.length - 1];
+    let neckPosition = snake[snake.length - 2];
+    console.log([headPosition[0] - neckPosition[0], headPosition[1] - neckPosition[1]]);
+    return [headPosition[0] - neckPosition[0], headPosition[1] - neckPosition[1]];
+}
+
 function moveUp() {
-    if (direction == "down") {
+    if (getCurrentDirection()[0] != 0) {
         return;
     }
     direction = "up";
 }
 
 function moveDown() {
-    if (direction == "up") {
+    if (getCurrentDirection()[0] != 0) {
         return;
     }
     direction = "down";
 }
 
 function moveLeft() {
-    if (direction == "right") {
+    if (getCurrentDirection()[1] != 0) {
         return;
     }
     direction = "left";
 }
 
 function moveRight() {
-    if (direction == "left") {
+    if (getCurrentDirection()[1] != 0) {
         return;
     }
     direction = "right";
