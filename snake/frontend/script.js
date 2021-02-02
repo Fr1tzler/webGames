@@ -9,7 +9,8 @@ let fruitPosition = [0, 0];
 let map = generateMap();
 let gameEnd = false;
 let timer;
-const deltaTimeBase = 200;
+const deltaTimeBaseScalable = 150;
+const deltaTimeBaseStatic = 50;
 let deltaTime;
 let gamePaused = false;
 let lastAdded = "";
@@ -109,7 +110,7 @@ function main() {
 
     enableControls();
     resizeControls();
-    deltaTime = deltaTimeBase;
+    deltaTime = deltaTimeBaseScalable + deltaTimeBaseStatic;
     generateTiles();
     resizeMap()
     update();
@@ -125,7 +126,7 @@ function update() {
     }
     nextState();
     drawMap();
-    deltaTime = deltaTimeBase * (Math.pow(mapSize, 2) - snake.length) / Math.pow(mapSize, 2);
+    deltaTime = deltaTimeBaseScalable * (Math.pow(mapSize, 2) - snake.length) / Math.pow(mapSize, 2) + deltaTimeBaseStatic;
     timer = setTimeout(update, deltaTime);    
 }
 
@@ -216,15 +217,16 @@ function newGame() {
     direction = "right";
     directionQueue = [];
     snake = [[0, 0], [0, 1], [0, 2]];
-    deltaTime = deltaTimeBase;
+    deltaTime = deltaTimeBaseScalable + deltaTimeBaseStatic;
     map = generateMap();
+    document.getElementById("score").innerText = `score ${snake.length}`;
     generateTiles();
     resizeMap()
     update();
 }
 
 function moveUp() {
-    if (directionQueue[0] == "up" || lastAdded == "down" || gamePaused) {
+    if (directionQueue[0] == "up" || direction == "down" || lastAdded == "down" || gamePaused) {
         return;
     }
     if (directionQueue.length > 2) {
@@ -235,7 +237,7 @@ function moveUp() {
 }
  
 function moveDown() {
-    if (directionQueue[0] == "down" || lastAdded == "up" || gamePaused) {
+    if (directionQueue[0] == "down" || direction == "up" || lastAdded == "up" || gamePaused) {
         return;
     }
     if (directionQueue.length > 2) {
@@ -246,7 +248,7 @@ function moveDown() {
 }
  
 function moveLeft() {
-    if (directionQueue[0] == "left" || lastAdded == "right" || gamePaused) {
+    if (directionQueue[0] == "left" || direction == "right" || lastAdded == "right" || gamePaused) {
         return;
     }
     if (directionQueue.length > 2) {
@@ -257,7 +259,7 @@ function moveLeft() {
 }
  
 function moveRight() {
-    if (directionQueue[0] == "right" || lastAdded == "left" || gamePaused) {
+    if (directionQueue[0] == "right" || direction == "left" || lastAdded == "left" || gamePaused) {
         return;
     }
     if (directionQueue.length > 2) {
