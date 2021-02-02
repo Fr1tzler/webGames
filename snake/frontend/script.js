@@ -5,12 +5,14 @@ let mapSize = 12;
 let snake = [[0, 0], [0, 1], [0, 2]];
 let direction = "right";
 let directionQueue = [];
+let fruitPosition = [0, 0];
 let map = generateMap();
 let gameEnd = false;
 let timer;
 const deltaTimeBase = 200;
 let deltaTime;
 let gamePaused = false;
+
 
 function generateMap() {
     let map = []
@@ -77,6 +79,8 @@ function setNextFruit(map) {
     while (true) {
         let fruitY = getRandomInt(mapSize);
         let fruitX = getRandomInt(mapSize);
+        fruitPosition[0] = fruitY;
+        fruitPosition[1] = fruitX;
         if (map[fruitY][fruitX] == emptyTile) {
             map[fruitY][fruitX] = fruitTile;
             break;
@@ -128,22 +132,14 @@ function update() {
 function drawMap() {
     for (let y = 0; y < mapSize; y++) {
         for (let x = 0; x < mapSize; x++) {
-            let color = "grey";
-            switch (map[y][x]) {
-                case fruitTile:
-                    color = "orange";
-                    break;
-                case snakeTile:
-                    color = "white";
-                    break;
-                case emptyTile:
-                    break;
-                default:
-                    break;
-            }
-            document.getElementById(`tile_${y}_${x}`).style.backgroundColor = color;
+            document.getElementById(`tile_${y}_${x}`).style.backgroundColor = "grey";
         }
     }
+    for (let i = 0; i < mapSize; i++) {
+        document.getElementById(`tile_${i}_${fruitPosition[1]}`).style.backgroundColor = "rgb(108, 108, 108)"
+        document.getElementById(`tile_${fruitPosition[0]}_${i}`).style.backgroundColor = "rgb(108, 108, 108)"
+    }
+    document.getElementById(`tile_${fruitPosition[0]}_${fruitPosition[1]}`).style.backgroundColor = "orange";
     for (let i = 0; i < snake.length; i++) {
         let tileId = `tile_${snake[i][0]}_${snake[i][1]}`;
         let color = getSnakeTileColor(snake.length, i);
@@ -222,28 +218,28 @@ function newGame() {
 }
 
 function moveUp() {
-    if (directionQueue[0] == "up" || direction == "down" || pauseClicked) {
+    if (directionQueue[0] == "up" || direction == "down" || gamePaused) {
         return;
     }
     directionQueue.unshift("up");
 }
 
 function moveDown() {
-    if (directionQueue[0] == "down" || direction == "up" || pauseClicked) {
+    if (directionQueue[0] == "down" || direction == "up" || gamePaused) {
         return;
     }
     directionQueue.unshift("down");
 }
 
 function moveLeft() {
-    if (directionQueue[0] == "left" || direction == "right" || pauseClicked) {
+    if (directionQueue[0] == "left" || direction == "right" || gamePaused) {
         return;
     }
     directionQueue.unshift("left");
 }
 
 function moveRight() {
-    if (directionQueue[0] == "right" || direction == "left" || pauseClicked) {
+    if (directionQueue[0] == "right" || direction == "left" || gamePaused) {
         return;
     }
     directionQueue.unshift("right");
