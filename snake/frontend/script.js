@@ -130,20 +130,26 @@ function update() {
 }
 
 function drawMap() {
+    let colorMap = []
     for (let y = 0; y < mapSize; y++) {
+        colorMap.push([]);
         for (let x = 0; x < mapSize; x++) {
-            document.getElementById(`tile_${y}_${x}`).style.backgroundColor = "grey";
+            colorMap[y].push("grey");
         }
     }
     for (let i = 0; i < mapSize; i++) {
-        document.getElementById(`tile_${i}_${fruitPosition[1]}`).style.backgroundColor = "rgb(108, 108, 108)"
-        document.getElementById(`tile_${fruitPosition[0]}_${i}`).style.backgroundColor = "rgb(108, 108, 108)"
+        colorMap[i][fruitPosition[1]] = "rgb(108, 108, 108)";
+        colorMap[fruitPosition[0]][i] = "rgb(108, 108, 108)";
     }
+    colorMap[fruitPosition[0]][fruitPosition[1]] = "orange";
     document.getElementById(`tile_${fruitPosition[0]}_${fruitPosition[1]}`).style.backgroundColor = "orange";
     for (let i = 0; i < snake.length; i++) {
-        let tileId = `tile_${snake[i][0]}_${snake[i][1]}`;
-        let color = getSnakeTileColor(snake.length, i);
-        document.getElementById(tileId).style.backgroundColor = color;
+        colorMap[snake[i][0]][snake[i][1]] = getSnakeTileColor(snake.length, i);
+    }
+    for (let y = 0; y < mapSize; y++) {
+        for (let x = 0; x < mapSize; x++) {
+            document.getElementById(`tile_${y}_${x}`).style.backgroundColor = colorMap[y][x];
+        }
     }
 }
 
@@ -158,9 +164,9 @@ function resizeMap() {
         document.getElementById(`row_${rowId}`).style.height = `${Math.floor(squareSize / mapSize)}px`;
         for (let columnId = 0; columnId < mapSize; columnId++) {
             tile = document.getElementById(`tile_${rowId}_${columnId}`);
-            tile.style.width = `${Math.floor(squareSize / mapSize * 0.8)}px`;
-            tile.style.height = `${Math.floor(squareSize / mapSize * 0.8)}px`;
-            tile.style.margin = `${Math.floor(squareSize / mapSize * 0.1)}px`;
+            tile.style.width = `${Math.floor(squareSize / mapSize * 0.9)}px`;
+            tile.style.height = `${Math.floor(squareSize / mapSize * 0.9)}px`;
+            tile.style.margin = `${Math.floor(squareSize / mapSize * 0.05)}px`;
         }
     }   
 }

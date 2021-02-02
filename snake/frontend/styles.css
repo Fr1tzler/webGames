@@ -48,7 +48,7 @@ body {
     width: 30px;
     position: relative;
     background-color: grey;
-    transition: all ease 0.05s;
+    transition: all ease 0.3s;
 }
 
 .score {
