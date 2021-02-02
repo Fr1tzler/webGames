@@ -12,7 +12,7 @@ let timer;
 const deltaTimeBase = 200;
 let deltaTime;
 let gamePaused = false;
-
+let lastAdded = "";
 
 function generateMap() {
     let map = []
@@ -224,38 +224,54 @@ function newGame() {
 }
 
 function moveUp() {
-    if (directionQueue[0] == "up" || direction == "down" || gamePaused) {
+    if (directionQueue[0] == "up" || lastAdded == "down" || gamePaused) {
         return;
     }
+    if (directionQueue.length > 2) {
+        directionQueue.pop()
+    }
+    lastAdded = "up"
     directionQueue.unshift("up");
 }
-
+ 
 function moveDown() {
-    if (directionQueue[0] == "down" || direction == "up" || gamePaused) {
+    if (directionQueue[0] == "down" || lastAdded == "up" || gamePaused) {
         return;
     }
+    if (directionQueue.length > 2) {
+        directionQueue.pop()
+    }
+    lastAdded = "down"
     directionQueue.unshift("down");
 }
-
+ 
 function moveLeft() {
-    if (directionQueue[0] == "left" || direction == "right" || gamePaused) {
+    if (directionQueue[0] == "left" || lastAdded == "right" || gamePaused) {
         return;
     }
+    if (directionQueue.length > 2) {
+        directionQueue.pop()
+    }
+    lastAdded = "left"
     directionQueue.unshift("left");
 }
-
+ 
 function moveRight() {
-    if (directionQueue[0] == "right" || direction == "left" || gamePaused) {
+    if (directionQueue[0] == "right" || lastAdded == "left" || gamePaused) {
         return;
     }
+    if (directionQueue.length > 2) {
+        directionQueue.pop()
+    }
+    lastAdded = "right"
     directionQueue.unshift("right");
 }
 
 function enableControls() {
-    document.getElementById("btnUp").addEventListener("click", moveUp);
-    document.getElementById("btnDown").addEventListener("click", moveDown);
-    document.getElementById("btnLeft").addEventListener("click", moveLeft);
-    document.getElementById("btnRight").addEventListener("click", moveRight);    
+    document.getElementById("btnUp").addEventListener("keydown", moveUp);
+    document.getElementById("btnDown").addEventListener("keydown", moveDown);
+    document.getElementById("btnLeft").addEventListener("keydown", moveLeft);
+    document.getElementById("btnRight").addEventListener("keydown", moveRight);    
 }
 
 function resizeControls() {
