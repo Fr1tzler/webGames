@@ -89,9 +89,11 @@ function main() {
     document.getElementById("size24").addEventListener("click", function () {mapSize = 24;});
     document.getElementById("size32").addEventListener("click", function () {mapSize = 32;});
     document.getElementById("startNewGame").addEventListener("click", newGame);
-
     if (!isMobileDevice()) {
         document.getElementById("btnBlock").style.visibility = "hidden";
+        document.getElementById("pauseButton").style.visibility = "hidden";
+    } else {
+        document.getElementById("pauseButton").addEventListener("click", pauseClicked);
     }
 
     enableControls();
