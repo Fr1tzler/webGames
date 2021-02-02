@@ -65,7 +65,7 @@ function nextState() {
             break;
     }
 }
-// possible infinite loop
+
 function setNextFruit(map) {
     while (true) {
         let fruitY = getRandomInt(mapSize);
@@ -124,7 +124,7 @@ function drawMap() {
             let color = "grey";
             switch (map[y][x]) {
                 case fruitTile:
-                    color = "white";
+                    color = "orangered";
                     break;
                 case snakeTile:
                     color = "white";
