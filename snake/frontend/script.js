@@ -5,14 +5,13 @@ let mapSize = 12;
 let snake = [[0, 0], [0, 1], [0, 2]];
 let direction = "right";
 let directionQueue = [];
-let fruitPosition = [0, 0];
 let map = generateMap();
 let gameEnd = false;
 let timer;
 const deltaTimeBase = 200;
 let deltaTime;
 let gamePaused = false;
-
+let lastAdded = ""
 
 function generateMap() {
     let map = []
@@ -79,8 +78,6 @@ function setNextFruit(map) {
     while (true) {
         let fruitY = getRandomInt(mapSize);
         let fruitX = getRandomInt(mapSize);
-        fruitPosition[0] = fruitY;
-        fruitPosition[1] = fruitX;
         if (map[fruitY][fruitX] == emptyTile) {
             map[fruitY][fruitX] = fruitTile;
             break;
@@ -132,14 +129,22 @@ function update() {
 function drawMap() {
     for (let y = 0; y < mapSize; y++) {
         for (let x = 0; x < mapSize; x++) {
-            document.getElementById(`tile_${y}_${x}`).style.backgroundColor = "grey";
+            let color = "grey";
+            switch (map[y][x]) {
+                case fruitTile:
+                    color = "orange";
+                    break;
+                case snakeTile:
+                    color = "white";
+                    break;
+                case emptyTile:
+                    break;
+                default:
+                    break;
+            }
+            document.getElementById(`tile_${y}_${x}`).style.backgroundColor = color;
         }
     }
-    for (let i = 0; i < mapSize; i++) {
-        document.getElementById(`tile_${i}_${fruitPosition[1]}`).style.backgroundColor = "rgb(108, 108, 108)"
-        document.getElementById(`tile_${fruitPosition[0]}_${i}`).style.backgroundColor = "rgb(108, 108, 108)"
-    }
-    document.getElementById(`tile_${fruitPosition[0]}_${fruitPosition[1]}`).style.backgroundColor = "orange";
     for (let i = 0; i < snake.length; i++) {
         let tileId = `tile_${snake[i][0]}_${snake[i][1]}`;
         let color = getSnakeTileColor(snake.length, i);
@@ -218,38 +223,55 @@ function newGame() {
 }
 
 function moveUp() {
-    if (directionQueue[0] == "up" || direction == "down" || gamePaused) {
+    console.log(directionQueue)
+    if (directionQueue[0] == "up" || lastAdded == "down") {
         return;
     }
+    if (directionQueue.length > 2) {
+        directionQueue.pop()
+    }
+    lastAdded = "up"
     directionQueue.unshift("up");
 }
 
 function moveDown() {
-    if (directionQueue[0] == "down" || direction == "up" || gamePaused) {
+    if (directionQueue[0] == "down" || lastAdded == "up") {
         return;
     }
+    if (directionQueue.length > 2) {
+        directionQueue.pop()
+    }
+    lastAdded = "down"
     directionQueue.unshift("down");
 }
 
 function moveLeft() {
-    if (directionQueue[0] == "left" || direction == "right" || gamePaused) {
+    if (directionQueue[0] == "left" || lastAdded == "right") {
         return;
     }
+    if (directionQueue.length > 2) {
+        directionQueue.pop()
+    }
+    lastAdded = "left"
     directionQueue.unshift("left");
 }
 
 function moveRight() {
-    if (directionQueue[0] == "right" || direction == "left" || gamePaused) {
+    if (directionQueue[0] == "right" || lastAdded == "left") {
         return;
     }
+    if (directionQueue.length > 2) {
+        directionQueue.pop()
+    }
+    lastAdded = "right"
     directionQueue.unshift("right");
 }
 
 function enableControls() {
-    document.getElementById("btnUp").addEventListener("click", moveUp);
-    document.getElementById("btnDown").addEventListener("click", moveDown);
-    document.getElementById("btnLeft").addEventListener("click", moveLeft);
-    document.getElementById("btnRight").addEventListener("click", moveRight);    
+    document.getElementById("btnUp").addEventListener("keydown", moveUp);
+    document.getElementById("btnDown").addEventListener("keydown", moveDown);
+    document.getElementById("btnLeft").addEventListener("keydown", moveLeft);
+    document.getElementById("btnRight").addEventListener("keydown", moveRight);    
 }
 
 function resizeControls() {
@@ -289,33 +311,18 @@ window.addEventListener("resize", resizeAll);
 document.addEventListener("keydown", function (event) {
     switch (event.code) {
         case "ArrowDown":
-            if (event.repeat) {
-                return;
-            }
             moveDown();
             break;
         case "ArrowUp":
-            if (event.repeat) {
-                return;
-            }
             moveUp();
             break;
         case "ArrowLeft":
-            if (event.repeat) {
-                return;
-            }
             moveLeft();
             break;
         case "ArrowRight":
-            if (event.repeat) {
-                return;
-            }
             moveRight();
             break;    
         case "KeyP":
-            if (event.repeat) {
-                return;
-            }
             pauseClicked();
             break;
         default:
