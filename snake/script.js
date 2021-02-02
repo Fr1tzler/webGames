@@ -193,11 +193,12 @@ function pauseClicked() {
 function gameEnded() {
     console.log("game lost");
     document.getElementById("gameEnd").style.opacity = 1;
-
+    document.getElementById("gameEnd").style.visibility = "visible";
 }
 
 function newGame() {
     document.getElementById("gameEnd").style.opacity = 0;
+    document.getElementById("gameEnd").style.visibility = "hidden";
     document.getElementById("field").innerHTML = "";
     gameEnd = false;
     direction = "right";

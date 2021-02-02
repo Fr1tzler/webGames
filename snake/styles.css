@@ -3,6 +3,7 @@ body {
     overflow: hidden;
     padding: 0;
     margin: 0;
+    user-select: none;
 }
 
 .field {
@@ -77,6 +78,7 @@ body {
     background-color: #000000aa;
     opacity: 0;
     transition: all ease 0.3s;
+    visibility: hidden;
 }
 
 .gameEndMenu {
@@ -149,4 +151,9 @@ body {
 
 .controlButton:active {
     background-color: white;
+}
+
+#pauseButton {
+    background-color: yellow;
+    visibility: hidden;
 }
