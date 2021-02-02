@@ -4,6 +4,7 @@ const emptyTile = "e";
 let mapSize = 12;
 let snake = [[0, 0], [0, 1], [0, 2]];
 let direction = "right";
+let directionQueue = [];
 let map = generateMap();
 let gameEnd = false;
 let timer;
@@ -30,6 +31,9 @@ function generateMap() {
 function nextState() {
     let snakeHeadY = snake[snake.length - 1][0];
     let snakeHeadX = snake[snake.length - 1][1];
+    if (directionQueue.length != 0) {
+        direction = directionQueue.pop();
+    }
     switch (direction) {
         case "right":
             snakeHeadX += 1;
@@ -54,6 +58,9 @@ function nextState() {
             document.getElementById("score").innerText = `score: ${snake.length}`;
             break;
         case snakeTile:
+            if (snakeHeadX == snake[0][0] && snakeHeadY == snake[0][1]) {
+                break;
+            }
             gameEnd = true;
             gameEnded();
             break;
@@ -205,6 +212,7 @@ function newGame() {
     document.getElementById("field").innerHTML = "";
     gameEnd = false;
     direction = "right";
+    directionQueue = [];
     snake = [[0, 0], [0, 1], [0, 2]];
     deltaTime = deltaTimeBase;
     map = generateMap();
@@ -213,43 +221,32 @@ function newGame() {
     update();
 }
 
-// FIX LATER
-function getCurrentDirection() {
-    if (gamePaused) {
-        return[1,1]
-    }
-    let headPosition = snake[snake.length - 1];
-    let neckPosition = snake[snake.length - 2];
-    console.log([headPosition[0] - neckPosition[0], headPosition[1] - neckPosition[1]]);
-    return [headPosition[0] - neckPosition[0], headPosition[1] - neckPosition[1]];
-}
-
 function moveUp() {
-    if (getCurrentDirection()[0] != 0) {
+    if (directionQueue[0] == "up" || direction == "down") {
         return;
     }
-    direction = "up";
+    directionQueue.unshift("up");
 }
 
 function moveDown() {
-    if (getCurrentDirection()[0] != 0) {
+    if (directionQueue[0] == "down" || direction == "up") {
         return;
     }
-    direction = "down";
+    directionQueue.unshift("down");
 }
 
 function moveLeft() {
-    if (getCurrentDirection()[1] != 0) {
+    if (directionQueue[0] == "left" || direction == "right") {
         return;
     }
-    direction = "left";
+    directionQueue.unshift("left");
 }
 
 function moveRight() {
-    if (getCurrentDirection()[1] != 0) {
+    if (directionQueue[0] == "right" || direction == "left") {
         return;
     }
-    direction = "right";
+    directionQueue.unshift("right");
 }
 
 function enableControls() {
