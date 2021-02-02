@@ -136,6 +136,12 @@ function drawMap() {
             document.getElementById("tile_" + y.toString() + "_" + x.toString()).style.backgroundColor = color;
         }
     }
+    for (let i = 0; i < snake.length; i++) {
+        let tileId = `tile_${snake[i][0]}_${snake[i][1]}`;
+        let color = getSnakeTileColor(snake.length, i);
+        console.log(color);
+        document.getElementById(tileId).style.backgroundColor = color;
+    }
 }
 
 function resizeMap() {
@@ -299,3 +305,10 @@ document.addEventListener("keydown", function (event) {
             break;
         }
 });
+
+function getSnakeTileColor(snakeLength, distanceFromSnakeEnd) {
+    let min = Math.floor((2 * 128 + 255) / 3);
+    let max = 255;
+    let component = Math.floor((max - min) * (distanceFromSnakeEnd + 1) / snakeLength + min);   
+    return `rgb(${component}, ${component}, ${component})`;
+}

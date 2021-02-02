@@ -1,1 +1,2 @@
+0.14 - make snake gradientally colored from head to tail
 0.13 - fixed bug, that caused game speed up by pressing in the field center, started adding pause button 
