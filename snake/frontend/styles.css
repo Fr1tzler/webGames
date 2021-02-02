@@ -68,7 +68,7 @@ body {
     width: 100vw;
     background-color: #000000aa;
     opacity: 0;
-    transition: all ease 0.3s;
+    transition: all ease 1s;
 }
 
 .pauseTextContainer {
@@ -90,7 +90,7 @@ body {
     width: 100vw;
     background-color: #000000aa;
     opacity: 0;
-    transition: all ease 0.3s;
+    transition: all ease 1s;
     visibility: hidden;
 }
 

@@ -213,7 +213,11 @@ function newGame() {
     update();
 }
 
+// FIX LATER
 function getCurrentDirection() {
+    if (gamePaused) {
+        return[1,1]
+    }
     let headPosition = snake[snake.length - 1];
     let neckPosition = snake[snake.length - 2];
     console.log([headPosition[0] - neckPosition[0], headPosition[1] - neckPosition[1]]);
