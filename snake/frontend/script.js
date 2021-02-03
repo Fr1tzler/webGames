@@ -432,12 +432,10 @@ function sendScoreToServer() {
         score: snake.length
     };
     try {
-        fetch(url, {
-            method: 'POST', // или 'PUT'
-            body: JSON.stringify(data), // данные могут быть 'строкой' или {объектом}!
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        fetch(serverUrl, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {'Content-Type': 'application/json'}
         }).then(data => console.log(data));
     } catch (error) {
         console.error('Error: ', error);
