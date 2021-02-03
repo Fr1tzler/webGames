@@ -119,12 +119,12 @@ function paintSizeButtons(activeSize) {
     document.getElementById(`size${activeSize}`).style.backgroundColor = "grey";
 }
 
-function main() {
+function init() {
     initSizeButtons();
     document.getElementById("startNewGame").addEventListener("click", () => {
         gameStartScreenOff();
         newGame();
-    });    
+    });
     if (!isMobileDevice()) {
         document.getElementById("btnBlock").style.visibility = "hidden";
         document.getElementById("pauseButton").style.visibility = "hidden";
@@ -137,25 +137,28 @@ function main() {
     })
 
     enableControls();
+    console.log("123");
     resizeControls();
-    deltaTime = deltaTimeBaseScalable + deltaTimeBaseStatic;
+
+
     generateTiles();
-    resizeMap()
-    update();
+    resizeMap();
+    drawMap();
+    gameStartScreenOn();
 }
 
-function update() {
+function mainloop() {
     if (gameEnd) {
         return;
     }
     if (gamePaused) {
-        timer = setTimeout(update, 50);
+        timer = setTimeout(mainloop, 50);
         return;
     }
     nextState();
     drawMap();
     deltaTime = deltaTimeBaseScalable * (Math.pow(mapSize, 2) - snake.length) / Math.pow(mapSize, 2) + deltaTimeBaseStatic;
-    timer = setTimeout(update, deltaTime);    
+    timer = setTimeout(mainloop, deltaTime);    
 }
 
 function drawMap() {
@@ -233,6 +236,10 @@ function pauseClicked() {
 }
 
 function gameEndScreenOn() {
+    if (isMobileDevice()) { 
+        document.getElementById("btnBlock").opacity = 0;
+        document.getElementById("btnBlock").visibility = "hidden";
+    }
     document.getElementById("gameEnd").style.opacity = 1;
     document.getElementById("gameEnd").style.visibility = "visible";
 }
@@ -248,6 +255,10 @@ function gameStartScreenOn() {
 }
 
 function gameStartScreenOff() {
+    if (isMobileDevice()) { 
+        document.getElementById("btnBlock").opacity = 1;
+        document.getElementById("btnBlock").visibility = "visible";
+    }
     document.getElementById("gameStart").style.opacity = 0;
     document.getElementById("gameStart").style.visibility = "hidden";
 }
@@ -265,7 +276,8 @@ function newGame() {
     gameEnd = false;
     generateTiles();
     resizeMap()
-    update();
+    drawMap();
+    mainloop();
 }
 
 function moveUp() {
@@ -313,10 +325,10 @@ function moveRight() {
 }
 
 function enableControls() {
-    document.getElementById("btnUp").addEventListener("onclick", moveUp);
-    document.getElementById("btnDown").addEventListener("onclick", moveDown);
-    document.getElementById("btnLeft").addEventListener("onclick", moveLeft);
-    document.getElementById("btnRight").addEventListener("onclick", moveRight);    
+    document.getElementById("btnUp").addEventListener("click", moveUp);
+    document.getElementById("btnDown").addEventListener("click", moveDown);
+    document.getElementById("btnLeft").addEventListener("click", moveLeft);
+    document.getElementById("btnRight").addEventListener("click", moveRight);    
 }
 
 function resizeControls() {
@@ -351,7 +363,7 @@ function isMobileDevice() {
     return navigator.maxTouchPoints != 0;
 }
 
-document.addEventListener("DOMContentLoaded", main);
+document.addEventListener("DOMContentLoaded", init);
 window.addEventListener("resize", resizeAll);
 document.addEventListener("keydown", function (event) {
     switch (event.code) {
