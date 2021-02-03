@@ -14,6 +14,7 @@ const deltaTimeBaseStatic = 50;
 let deltaTime;
 let gamePaused = false;
 let lastAdded = "";
+const serverUrl = "fritzler.ru:8000";
 
 function generateMap() {
     let map = []
@@ -62,6 +63,7 @@ function nextState() {
             break;
         case snakeTile:
             gameEnd = true;
+            sendScoreToServer();
             gameEndScreenOn();
             break;
         case emptyTile:
@@ -409,4 +411,35 @@ function getSnakeTileColor(snakeLength, distanceFromSnakeEnd) {
     return `rgb(${component}, ${component}, ${component})`;
 }
 
-fetch("http://fritzler.ru:3000").then(a => console.log(a));
+function sendScoreToServer() {
+    fetch("http://fritzler.ru:8000")
+    .then(data => {
+        console.log(data);
+    });
+}
+
+function getTopPlayersFromServer() {
+    fetch("http://fritzler.ru:8000")
+    .then(data => {
+        console.log(data);
+    });
+}
+
+function sendScoreToServer() {
+    let data = {
+        mapSize: mapSize,
+        username: "AddisAbeba",
+        score: snake.length
+    };
+    try {
+        fetch(url, {
+            method: 'POST', // или 'PUT'
+            body: JSON.stringify(data), // данные могут быть 'строкой' или {объектом}!
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(data => console.log(data));
+    } catch (error) {
+        console.error('Error: ', error);
+    }
+}
