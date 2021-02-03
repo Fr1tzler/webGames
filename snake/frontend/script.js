@@ -408,3 +408,5 @@ function getSnakeTileColor(snakeLength, distanceFromSnakeEnd) {
     let component = Math.floor((max - min) * (distanceFromSnakeEnd + 1) / snakeLength + min);   
     return `rgb(${component}, ${component}, ${component})`;
 }
+
+fetch("http://fritzler.ru:3000").then(a => console.log(a));

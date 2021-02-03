@@ -1,27 +1,16 @@
-const http = require("http");
-const url = require("url");
-const mysql = require("mysql");
+const https = require('https');
+const fs = require('fs');
 
-const possibleFieldSizes = [12, 18, 24, 32];
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/fritzler.ru/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/fritzler.ru/cert.pem')
+};
 
-
-http.createServer((request, response) => {
+https.createServer(options, (request, response) => {
+    response.writeHead(200, {
+    'Content-Type': 'text/plain',
+    'Access-Control-Allow-Origin' : '*',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE'
+});
     response.end("response");
-}).listen(3000);
-
-
-function writeToDatabase(fieldSize, username, score) {
-    if (!possibleFieldSizes.includes(fieldSize)) {
-        return;
-    }
-
-}
-
-function getTopTen(fieldSize) {
-    return;
-}
-
-
-function getUserPosition(fieldSize) {
-    return;
-}
+}).listen(8000);
