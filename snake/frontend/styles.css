@@ -82,7 +82,7 @@ body {
     transform: translate(-50%, -50%);
 }
 
-.gameEndMenuContainer {
+.gameMenuContainer {
     position: absolute;
     top: 0;
     left: 0;
@@ -94,7 +94,7 @@ body {
     visibility: hidden;
 }
 
-.gameEndMenu {
+.gameMenu {
     position: relative;
     border-radius: 5px;
     text-align: center;
@@ -110,7 +110,7 @@ body {
     color: white;
 }
 
-.gameEndMenu h1 {
+.gameMenu h1 {
     font-size: 40px;
 }
 
@@ -143,14 +143,6 @@ body {
     margin-top: 20px;
     font-size: xx-large;
     font-weight: bolder;
-}
-
-.swipeDetector {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vw;
 }
 
 .controlsContainer {

@@ -61,11 +61,8 @@ function nextState() {
             document.getElementById("score").innerText = `score: ${snake.length}`;
             break;
         case snakeTile:
-            if (snakeHeadX == snake[0][0] && snakeHeadY == snake[0][1]) {
-                break;
-            }
             gameEnd = true;
-            gameEnded();
+            gameEndScreenOn();
             break;
         case emptyTile:
             map[snakeHeadY][snakeHeadX] = snakeTile;
@@ -124,13 +121,20 @@ function paintSizeButtons(activeSize) {
 
 function main() {
     initSizeButtons();
-    document.getElementById("startNewGame").addEventListener("click", newGame);    
+    document.getElementById("startNewGame").addEventListener("click", () => {
+        gameStartScreenOff();
+        newGame();
+    });    
     if (!isMobileDevice()) {
         document.getElementById("btnBlock").style.visibility = "hidden";
         document.getElementById("pauseButton").style.visibility = "hidden";
     } else {
         document.getElementById("pauseButton").addEventListener("click", pauseClicked);
     }
+    document.getElementById("toGameStartMenu").addEventListener("click", () => {
+        gameEndScreenOff();
+        gameStartScreenOn();
+    })
 
     enableControls();
     resizeControls();
@@ -228,22 +232,37 @@ function pauseClicked() {
     }
 }
 
-function gameEnded() {
+function gameEndScreenOn() {
     document.getElementById("gameEnd").style.opacity = 1;
     document.getElementById("gameEnd").style.visibility = "visible";
+}
+
+function gameEndScreenOff() {
+    document.getElementById("gameEnd").style.opacity = 0;
+    document.getElementById("gameEnd").style.visibility = "hidden";
+}
+
+function gameStartScreenOn() {
+    document.getElementById("gameStart").style.opacity = 1;
+    document.getElementById("gameStart").style.visibility = "visible";
+}
+
+function gameStartScreenOff() {
+    document.getElementById("gameStart").style.opacity = 0;
+    document.getElementById("gameStart").style.visibility = "hidden";
 }
 
 function newGame() {
     document.getElementById("gameEnd").style.opacity = 0;
     document.getElementById("gameEnd").style.visibility = "hidden";
     document.getElementById("field").innerHTML = "";
-    gameEnd = false;
     direction = "right";
     directionQueue = [];
     snake = [[0, 0], [0, 1], [0, 2]];
     deltaTime = deltaTimeBaseScalable + deltaTimeBaseStatic;
     map = generateMap();
     document.getElementById("score").innerText = `score ${snake.length}`;
+    gameEnd = false;
     generateTiles();
     resizeMap()
     update();
@@ -294,10 +313,10 @@ function moveRight() {
 }
 
 function enableControls() {
-    document.getElementById("btnUp").addEventListener("keydown", moveUp);
-    document.getElementById("btnDown").addEventListener("keydown", moveDown);
-    document.getElementById("btnLeft").addEventListener("keydown", moveLeft);
-    document.getElementById("btnRight").addEventListener("keydown", moveRight);    
+    document.getElementById("btnUp").addEventListener("onclick", moveUp);
+    document.getElementById("btnDown").addEventListener("onclick", moveDown);
+    document.getElementById("btnLeft").addEventListener("onclick", moveLeft);
+    document.getElementById("btnRight").addEventListener("onclick", moveRight);    
 }
 
 function resizeControls() {
