@@ -94,13 +94,37 @@ function getRandomInt(upperBound) {
     return Math.floor(Math.random() * upperBound);
 }
 
+function initSizeButtons() {
+    document.getElementById("size12").addEventListener("click", function () {
+        mapSize = 12;
+        paintSizeButtons(12);
+    });
+    document.getElementById("size18").addEventListener("click", function () {
+        mapSize = 18;
+        paintSizeButtons(18);
+    });
+    document.getElementById("size24").addEventListener("click", function () {
+        mapSize = 24;
+        paintSizeButtons(24);
+    });
+    document.getElementById("size32").addEventListener("click", function () {
+        mapSize = 32;
+        paintSizeButtons(32);
+    });
+    paintSizeButtons(12);
+}
+
+function paintSizeButtons(activeSize) {
+    let sizes = [12, 18, 24, 32];
+    for (let i  = 0; i < sizes.length; i++) {
+        document.getElementById(`size${sizes[i]}`).style.backgroundColor = "rgb(108, 108, 108)";
+    }
+    document.getElementById(`size${activeSize}`).style.backgroundColor = "grey";
+}
+
 function main() {
-    // REFACTOR ASAP
-    document.getElementById("size12").addEventListener("click", function () {mapSize = 12;});
-    document.getElementById("size18").addEventListener("click", function () {mapSize = 18;});
-    document.getElementById("size24").addEventListener("click", function () {mapSize = 24;});
-    document.getElementById("size32").addEventListener("click", function () {mapSize = 32;});
-    document.getElementById("startNewGame").addEventListener("click", newGame);
+    initSizeButtons();
+    document.getElementById("startNewGame").addEventListener("click", newGame);    
     if (!isMobileDevice()) {
         document.getElementById("btnBlock").style.visibility = "hidden";
         document.getElementById("pauseButton").style.visibility = "hidden";

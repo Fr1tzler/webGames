@@ -98,23 +98,31 @@ body {
     position: relative;
     border-radius: 5px;
     text-align: center;
-    background-color: white;
+    background-color: #555555;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50vw;
-    height: 50vh;
+    width: max-content;
+    /* use width: min-content for mobile vertical */
+    height: fit-content;
+    
     padding: 1%;
+    color: white;
+}
+
+.gameEndMenu h1 {
+    font-size: 40px;
 }
 
 .newGameOptions {
-    margin: 5vh;
+    position: relative;
+    width: max-content;
+    margin: auto;
 }
 
 .customButton {
     user-select: none;
-    background-color: white;
-    border: 1px solid #666666;
+    background-color: rgb(108, 108, 108);
     padding: 10px;
     border-radius: 5px;
     display: inline-block;
@@ -122,14 +130,17 @@ body {
 }
 
 .customButton:hover {
-    background-color: #999999;
+    background-color: grey;
 }
 
 .sizeButton {
     font-size: x-large;
+    width: 3.5vw;
+    text-align: center;
 }
 
 .startButton {
+    margin-top: 20px;
     font-size: xx-large;
     font-weight: bolder;
 }
