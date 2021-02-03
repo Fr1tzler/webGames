@@ -7,7 +7,7 @@ let direction = "right";
 let directionQueue = [];
 let fruitPosition = [0, 0];
 let map = generateMap();
-let gameEnd = false;
+let gameEnd = true;
 let timer;
 const deltaTimeBaseScalable = 150;
 const deltaTimeBaseStatic = 50;
@@ -137,10 +137,7 @@ function init() {
     })
 
     enableControls();
-    console.log("123");
     resizeControls();
-
-
     generateTiles();
     resizeMap();
     drawMap();
@@ -224,6 +221,9 @@ function generateTiles() {
 }
 
 function pauseClicked() {
+    if (gameEnd) {
+        return;
+    }
     gamePaused = !gamePaused;
     let pause = document.getElementById("pause");
     if (gamePaused) {
