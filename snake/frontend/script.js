@@ -411,26 +411,27 @@ function getSnakeTileColor(snakeLength, distanceFromSnakeEnd) {
     return `rgb(${component}, ${component}, ${component})`;
 }
 
-function getTopPlayersFromServer() {
-    fetch("http://fritzler.ru:8000")
-    .then(data => {
-        console.log(data);
-    });
+function makeServerRequest() {
+    let data = {
+        username: "user",
+        score: 0,
+        mapSize : 12
+    }
+    
+    let response = "";
+    fetch("https://fritzler.ru:8000?mapSize=12", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => setLeaderboards(data));
 }
 
-function sendScoreToServer() {
-    let data = {
-        mapSize: mapSize,
-        username: "AddisAbeba",
-        score: snake.length
-    };
-    try {
-        fetch(serverUrl, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {'Content-Type': 'application/json'}
-        }).then(data => console.log(data));
-    } catch (error) {
-        console.error('Error: ', error);
-    }
+function setLeaderboards(data) {
+    console.log(data);
 }

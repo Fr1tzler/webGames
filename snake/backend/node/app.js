@@ -2,6 +2,8 @@ const https = require('https');
 const fs = require('fs');
 const url = require('url');
 const { parse } = require('querystring');
+
+/*
 const mysql = require("mysql");
 
 const dbConnection = mysql.createConnection({
@@ -10,6 +12,7 @@ const dbConnection = mysql.createConnection({
     database: "",
     password: ""
 })
+*/
 
 const options = {
   key: fs.readFileSync('/etc/letsencrypt/live/fritzler.ru/privkey.pem'),
@@ -23,42 +26,45 @@ https.createServer(options, (request, response) => {
         'Access-Control-Allow-Methods': 'GET,POST'
     });
 
-    if (request.method == "GET") {
-        let mapSize = url.parse(request.url, true).query.mapSize;
-        let result = getTopGames(mapSize);
-        if (result[0]) {
-            response.write(result[1]);
-        }
-    }
-    else if (request.method == "POST") {
-        let body = "";
-        request.on('data', chunk => {
-            body += chunk.toString();
-        });
-        request.on('end', () => {
-            let params = parse(body);
-            let mapSize = params.mapSize;
-            let username = params.username;
-            let score = params.score;
-            let result = pushScore(mapSize, username, score);
-            if (result) {
-                response.write("ok");
-            }
-        });
+    switch (request.method) {
+        case "POST":
+            let body = "";
+            request.on("data", chunk => {
+                body += chunk.toString();
+            })
+            request.on("end", () => {
+                let params = parse(body);
+                let username = params.username;
+                let score = params.score;
+                let mapSize = params.mapSize;
+                pushToDb(username, score, mapSize);
+                response.end(JSON.stringify(getTopFromDb(mapSize)));
+            })
+            break;
+        default:
+            break;
     }
     response.end("");
 }).listen(8000);
 
-function pushScore(mapSize, username, score) {
+function pushToDb(username, score, mapSize) {
     if (![12, 18, 24, 32].includes(mapSize)) {
-        return false;
+        return;
     }
-
+    return;
 }
 
-function getTopGames(mapSize) {
-    if (![12, 18, 24, 32].includes(mapSize)) {
-        return [false, undefined];
-    }
-    return [true, "nobody, bro"];
+function getTopFromDb(mapSize) {
+    return [
+        {'username' : "a", 'score' : 10},
+        {'username' : "b", 'score' : 9},
+        {'username' : "c", 'score' : 8},
+        {'username' : "d", 'score' : 7},
+        {'username' : "e", 'score' : 6},
+        {'username' : "f", 'score' : 5},
+        {'username' : "g", 'score' : 4},
+        {'username' : "h", 'score' : 3},
+        {'username' : "i", 'score' : 2},
+        {'username' : "j", 'score' : 1},
+    ];
 }
