@@ -46,7 +46,7 @@ https.createServer(options, (request, response) => {
             }
         });
     }
-    response.end();
+    response.end("");
 }).listen(8000);
 
 function pushScore(mapSize, username, score) {

@@ -14,7 +14,7 @@ const deltaTimeBaseStatic = 50;
 let deltaTime;
 let gamePaused = false;
 let lastAdded = "";
-const serverUrl = "fritzler.ru:8000";
+const serverUrl = "https://fritzler.ru:8000";
 
 function generateMap() {
     let map = []
@@ -409,13 +409,6 @@ function getSnakeTileColor(snakeLength, distanceFromSnakeEnd) {
     let max = 255;
     let component = Math.floor((max - min) * (distanceFromSnakeEnd + 1) / snakeLength + min);   
     return `rgb(${component}, ${component}, ${component})`;
-}
-
-function sendScoreToServer() {
-    fetch("http://fritzler.ru:8000")
-    .then(data => {
-        console.log(data);
-    });
 }
 
 function getTopPlayersFromServer() {
