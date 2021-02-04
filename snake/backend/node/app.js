@@ -70,7 +70,7 @@ function getTopFromDb(mapSize) {
     let result = [];
     dbConnection.query(dbQuery, (errors, queryResult, fields) => {
         console.log(errors);
-        for (let i = 0; i < Math.min(10, queryResult.length); i++) {
+        for (let i = 0; i < 10; i++) {
             let username = queryResult[i]["playerName"];
             let score = queryResult[i]["score"];
             result.push({
