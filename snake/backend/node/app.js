@@ -42,9 +42,9 @@ https.createServer(options, (request, response) => {
             })
             break;
         default:
+            response.end("ok, maan");
             break;
     }
-    response.end("");
 }).listen(8000);
 
 function pushToDb(username, score, mapSize) {

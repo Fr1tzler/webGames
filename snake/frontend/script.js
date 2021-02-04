@@ -14,7 +14,7 @@ const deltaTimeBaseStatic = 50;
 let deltaTime;
 let gamePaused = false;
 let lastAdded = "";
-const serverUrl = "https://fritzler.ru:8000";
+let username = "user";
 
 function generateMap() {
     let map = []
@@ -63,7 +63,7 @@ function nextState() {
             break;
         case snakeTile:
             gameEnd = true;
-            sendScoreToServer();
+            makeServerRequest();
             gameEndScreenOn();
             break;
         case emptyTile:
@@ -234,6 +234,24 @@ function pauseClicked() {
     } else {
         pause.style.opacity = 0;
         pause.style.visibility = "hidden";
+    }
+}
+
+function updateLeaderbords(leaderboards) {
+    let table = document.getElementById("leadersTable");
+    table.innerHTML = "";
+    let topRow = document.createElement("tr");
+    topRow.innerHTML = "<td>Player</td><td>Score</td>";
+    table.appendChild(topRow);
+    for (let i = 0; i < leaderboards.length; i++) {
+        let row = document.createElement("tr");
+        if (i == 0) {
+            console.log(leaderboards[i]);
+            console.log(leaderboards[i].username);
+            console.log(leaderboards[i].score);
+        }
+        row.innerHTML = `<td>${leaderboards[i].username}:</td><td>${leaderboards[i].score}</td>`;
+        table.appendChild(row);
     }
 }
 
@@ -413,25 +431,19 @@ function getSnakeTileColor(snakeLength, distanceFromSnakeEnd) {
 
 function makeServerRequest() {
     let data = {
-        username: "user",
-        score: 0,
-        mapSize : 12
-    }
-    
+        username: username,
+        score: snake.length,
+        mapSize : mapSize
+    }    
     let response = "";
     fetch("https://fritzler.ru:8000?mapSize=12", {
         method: "POST",
         body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
-        }
     })
     .then(response => {
         return response.json();
     })
-    .then(data => setLeaderboards(data));
-}
-
-function setLeaderboards(data) {
-    console.log(data);
+    .then(result => {
+        updateLeaderbords(result);
+    });
 }

@@ -178,3 +178,9 @@ body {
     right: 3vh;
     color: white;
 }
+
+.leaderboards {
+    margin: auto;
+    font-size: x-large;
+    margin-bottom: 10%;
+}
