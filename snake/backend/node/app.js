@@ -2,17 +2,24 @@ const https = require('https');
 const fs = require('fs');
 const url = require('url');
 const { parse } = require('querystring');
-
-/*
 const mysql = require("mysql");
 
 const dbConnection = mysql.createConnection({
-    host: "",
-    user: "",
-    database: "",
-    password: ""
+    host: "localhost",
+    user: "snake",
+    database: "SnakeRecords",
+    password: process.argv[2]
 })
-*/
+
+dbConnection.connect(err => {
+    if (err) {
+        console.log(err);
+        return err;
+    }
+    else {
+        console.log("Database connected.");
+    }
+})
 
 const options = {
   key: fs.readFileSync('/etc/letsencrypt/live/fritzler.ru/privkey.pem'),
@@ -33,10 +40,10 @@ https.createServer(options, (request, response) => {
                 body += chunk.toString();
             })
             request.on("end", () => {
-                let params = parse(body);
-                let username = params.username;
-                let score = params.score;
-                let mapSize = params.mapSize;
+                let requestParams = parse(body);
+                let username = requestParams.username;
+                let score = requestParams.score;
+                let mapSize = requestParams.mapSize;
                 pushToDb(username, score, mapSize);
                 response.end(JSON.stringify(getTopFromDb(mapSize)));
             })
@@ -51,20 +58,26 @@ function pushToDb(username, score, mapSize) {
     if (![12, 18, 24, 32].includes(mapSize)) {
         return;
     }
+    let dbQuery = `INSERT records${mapSize}x${mapSize}(playerName, score) VALUES("${username}", ${score});`;
+    dbConnection.query(dbQuery, (errors, queryResult, fields) => {
+        console.log(errors);
+    });
     return;
 }
 
 function getTopFromDb(mapSize) {
-    return [
-        {'username' : "a", 'score' : 10},
-        {'username' : "b", 'score' : 9},
-        {'username' : "c", 'score' : 8},
-        {'username' : "d", 'score' : 7},
-        {'username' : "e", 'score' : 6},
-        {'username' : "f", 'score' : 5},
-        {'username' : "g", 'score' : 4},
-        {'username' : "h", 'score' : 3},
-        {'username' : "i", 'score' : 2},
-        {'username' : "j", 'score' : 1},
-    ];
+    let dbQuery = `SELECT playerName, score FROM records${mapSize}x${mapSize} ORDER BY score DESC;`;
+    let result = [];
+    dbConnection.query(dbQuery, (errors, queryResult, fields) => {
+        console.log(errors);
+        for (let i = 0; i < Math.min(10, queryResult.length); i++) {
+            let username = queryResult[i]["playerName"];
+            let score = queryResult[i]["score"];
+            result.push({
+                'username' : username, 
+                "score" : score
+            });
+        }
+    });
+    return result;
 }
