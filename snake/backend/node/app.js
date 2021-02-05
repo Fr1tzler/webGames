@@ -55,14 +55,11 @@ https.createServer(options, (request, response) => {
 }).listen(8000);
 
 function pushToDb(username, score, mapSize) {
-    if (![12, 18, 24, 32].includes(mapSize)) {
+    if (![12, 18, 24, 32].includes(mapSize) || typeof(score) != "number") {
         return;
     }
-    let dbQuery = `INSERT records${mapSize}x${mapSize}(playerName, score) VALUES(:username, :score);`;
-    dbConnection.query(dbQuery, {
-        username : username,
-        score : score
-    },(errors, queryResult, fields) => {
+    let dbQuery = `INSERT records${mapSize}x${mapSize}(playerName, score) VALUES("${username}", "${score}");`;
+    dbConnection.query(dbQuery, (errors, queryResult, fields) => {
         console.log(errors);
     });
     return;
