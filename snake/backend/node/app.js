@@ -58,14 +58,21 @@ function pushToDb(username, score, mapSize) {
     if (![12, 18, 24, 32].includes(mapSize)) {
         return;
     }
-    let dbQuery = `INSERT records${mapSize}x${mapSize}(playerName, score) VALUES("${username}", ${score});`;
-    dbConnection.query(dbQuery, (errors, queryResult, fields) => {
+    let dbQuery = `INSERT records${mapSize}x${mapSize}(playerName, score) VALUES(:username, :score);`;
+    dbConnection.query(dbQuery, {
+        username : username,
+        score : score
+    },(errors, queryResult, fields) => {
         console.log(errors);
     });
     return;
 }
 
 function getTopFromDb(mapSize, response) {
+    if (![12, 18, 24, 32].includes(mapSize)) {
+        response.end("");
+        return;
+    }
     let dbQuery = `SELECT playerName, score FROM records${mapSize}x${mapSize} ORDER BY score DESC;`;
     let result = [];
     dbConnection.query(dbQuery, (errors, queryResult, fields) => {
