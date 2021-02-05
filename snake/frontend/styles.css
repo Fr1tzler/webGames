@@ -136,7 +136,8 @@ body {
 
 .sizeButton {
     font-size: x-large;
-    width: 3.5vw;
+    width: max-content;
+    height: max-content;
     text-align: center;
 }
 

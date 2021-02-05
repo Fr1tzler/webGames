@@ -462,6 +462,15 @@ function resizeControls() {
         button.style.height = `${buttonSize}px`;
         button.style.margin = `${buttonMargin}px`;
     }
+    
+    let pauseButtonSize = Math.floor(Math.min(window.innerWidth, window.innerHeight) / 10);
+    let offset = Math.floor(pauseButtonSize / 3);
+    document.getElementById("pauseButton").width = `${pauseButtonSize}px`;
+    document.getElementById("pauseButton").height = `${pauseButtonSize}px`;
+    document.getElementById("pauseButton").style.width = `${pauseButtonSize}px`;
+    document.getElementById("pauseButton").style.height = `${pauseButtonSize}px`;
+    document.getElementById("pauseButton").style.top = `${offset}px`;
+    document.getElementById("pauseButton").style.right = `${offset}px`;
 }
 
 function resizeMap() {
