@@ -14,7 +14,7 @@ const deltaTimeBaseStatic = 50;
 let deltaTime;
 let gamePaused = false;
 let lastAdded = "";
-let username = "user";
+let username = localStorage.getItem("name");
 
 function generateMap() {
     let map = []
@@ -30,6 +30,11 @@ function generateMap() {
     setNextFruit(map);
 
     return map;
+}
+
+function updateUsername() {
+    username = document.getElementById("usernameField").value;
+    localStorage["name"] = username;
 }
 
 function nextState() {
@@ -275,6 +280,7 @@ function gameStartScreenOn() {
 }
 
 function gameStartScreenOff() {
+    updateUsername();
     if (isMobileDevice()) { 
         document.getElementById("btnBlock").opacity = 1;
         document.getElementById("btnBlock").visibility = "visible";

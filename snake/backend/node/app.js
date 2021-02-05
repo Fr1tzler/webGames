@@ -77,7 +77,7 @@ function getTopFromDb(mapSize, response) {
                 'username' : username, 
                 "score" : score
             });
-            response.end(JSON.stringify(result));
         }
+        response.end(JSON.stringify(result));
     });
 }
