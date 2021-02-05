@@ -246,16 +246,11 @@ function updateLeaderbords(leaderboards) {
     let table = document.getElementById("leadersTable");
     table.innerHTML = "";
     let topRow = document.createElement("tr");
-    topRow.innerHTML = "<td>Player</td><td>Score</td>";
+    topRow.innerHTML = '<td class="leaderName">Player</td><td class="leaderScore">Score</td>';
     table.appendChild(topRow);
     for (let i = 0; i < leaderboards.length; i++) {
         let row = document.createElement("tr");
-        if (i == 0) {
-            console.log(leaderboards[i]);
-            console.log(leaderboards[i].username);
-            console.log(leaderboards[i].score);
-        }
-        row.innerHTML = `<td>${leaderboards[i].username}:</td><td>${leaderboards[i].score}</td>`;
+        row.innerHTML = `<td class="leaderName">${leaderboards[i].username}</td><td class="leaderScore">${leaderboards[i].score}</td>`;
         table.appendChild(row);
     }
 }
