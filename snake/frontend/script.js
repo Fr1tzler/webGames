@@ -26,10 +26,26 @@ function getSnakeTileColor(snakeLength, distanceFromSnakeEnd) {
     return `rgb(${component}, ${component}, ${component})`;
 }
 
+function setButtonBlockVisibility(setOn) {
+    let nextOpacity = 0;
+    let nextVisibility = "hiiden";
+    if (setOn) {
+        nextOpacity = 1;
+        nextVisibility = "visible";
+    }
+    document.getElementById("btnBlock").opacity = 0;
+    document.getElementById("btnBlock").visibility = "hidden";
+    let controlButtons = document.getElementsByClassName("controlButton");
+    for (let i = 0; i < controlButtons.length; i++) {
+        let button = controlButtons[i];
+        button.style.opacity = nextOpacity;
+        button.style.visibility = nextVisibility;
+    }
+}
+
 function showGameEndScreen() {
     if (isMobileDevice()) {
-        document.getElementById("btnBlock").opacity = 0;
-        document.getElementById("btnBlock").visibility = "hidden";
+        setButtonBlockVisibility(false);
     }
     document.getElementById("gameEnd").style.opacity = 1;
     document.getElementById("gameEnd").style.visibility = "visible";
@@ -48,8 +64,7 @@ function showGameStartScreen() {
 function hideGameStartScreen() {
     updateUsername();
     if (isMobileDevice()) {
-        document.getElementById("btnBlock").opacity = 1;
-        document.getElementById("btnBlock").visibility = "visible";
+        setButtonBlockVisibility(true);
     }
     document.getElementById("gameStart").style.opacity = 0;
     document.getElementById("gameStart").style.visibility = "hidden";
@@ -254,6 +269,7 @@ function init() {
     })
 
     enableControls();
+    setButtonBlockVisibility(false);
     generateTilesOfField();
     resizeEverything();
     updateTileColor();
@@ -411,13 +427,23 @@ function resizeEverything() {
 }
 
 function resizeControls() {
-    let maxXSize = Math.floor((window.innerWidth - window.innerHeight) / 2);
-    let maxYSize = Math.floor(window.innerHeight);
+    let maxXSize = 0;
+    let maxYSize = 0;
+    let buttonBlockXPosition = 0;
+    let buttonBlockYPosition = 0;
+    if (window.innerWidth > window.innerHeight) {
+        maxXSize = Math.floor((window.innerWidth - window.innerHeight) / 2);
+        maxYSize = Math.floor(window.innerHeight);
+        buttonBlockYPosition = Math.floor(maxYSize / 2);
+    } else {
+        maxXSize = Math.floor(window.innerWidth);
+        maxYSize = Math.floor((window.innerHeight - window.innerWidth) / 2);
+        buttonBlockYPosition = window.innerHeight - Math.floor(maxYSize / 2);
+    }
+    buttonBlockXPosition = Math.floor(maxXSize / 2);
     let controlBlockSize = Math.floor(Math.min(maxXSize, maxYSize) / Math.sqrt(2));
     let buttonSize = Math.floor(controlBlockSize * 0.8 / 2);
     let buttonMargin = Math.floor(controlBlockSize * 0.1 / 2);
-    let buttonBlockXPosition = Math.floor(maxXSize / 2);
-    let buttonBlockYPosition = Math.floor(maxYSize / 2);
     let buttonBlock = document.getElementById("btnBlock");
     buttonBlock.style.top = `${buttonBlockYPosition}px`;
     buttonBlock.style.left = `${buttonBlockXPosition}px`;
@@ -449,6 +475,7 @@ function resizeMap() {
             tile.style.margin = `${Math.floor(squareSize / mapSize * 0.05)}px`;
         }
     }
+    document.getElementById("field").style.top = `${Math.floor(squareSize * 0.05)}px`;
 }
 
 // other functions

@@ -22,9 +22,10 @@ body {
 .field {
     overflow: hidden;
     position: absolute;
-    top: 50%;
+    align-self: center;
+    margin: auto;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
 }
 
 .rowContainer {
@@ -153,6 +154,8 @@ body {
     height: 20vh;
     transform: translate(-50%, -50%) rotate(45deg);
     overflow: hidden;
+    opacity: 1;
+    visibility: visible;
 }
 
 .controlButton {
@@ -163,6 +166,7 @@ body {
     width: 8vh;
     height: 8vh;
     margin: 1vh;
+    transition: all ease 0.1s;
 }
 
 .controlButton:active {
@@ -172,8 +176,8 @@ body {
 #pauseButton {
     position: absolute;
     visibility: visible;
-    width: 7vh;
-    height: 7vh;
+    width: 12vh;
+    height: 12vh;
     top: 3vh;
     right: 3vh;
     color: white;
