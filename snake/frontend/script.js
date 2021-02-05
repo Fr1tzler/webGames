@@ -424,6 +424,10 @@ window.addEventListener("resize", resizeEverything);
 function resizeEverything() {
     resizeMap();
     resizeControls();
+    if (window.innerHeight > window.innerWidth) {
+        resizeLeaderboards();
+        relocateScore();
+    }
 }
 
 function resizeControls() {
@@ -490,6 +494,14 @@ function resizeMap() {
         }
     }
     document.getElementById("field").style.top = `${Math.floor(squareSize * 0.05)}px`;
+}
+
+function resizeLeaderboards() {
+    document.getElementById("leaderboardsContainer").style.width = "80vw";
+}
+
+function relocateScore() {
+    document.getElementById("score").style.top = `${window.innerWidth}px`;
 }
 
 // other functions

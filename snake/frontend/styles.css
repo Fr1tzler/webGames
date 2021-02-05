@@ -184,6 +184,19 @@ body {
     color: white;
 }
 
+.leaderboardsContainer {
+    position: relative;
+    scrollbar-width: none;
+    width: 20vw;
+    height: 20vh;
+    overflow-y: scroll;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #444444;
+    margin: auto;
+    margin-bottom: 10%;
+}
+
 .leaderboards {
     position: relative;
     width: inherit;
@@ -208,17 +221,4 @@ body {
 .leaderScore {
     text-align: right;
     color: orange;
-}
-
-.leaderboardsContainer {
-    position: relative;
-    scrollbar-width: none;
-    width: 20vw;
-    height: 20vh;
-    overflow-y: scroll;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: #444444;
-    margin: auto;
-    margin-bottom: 10%;
 }
