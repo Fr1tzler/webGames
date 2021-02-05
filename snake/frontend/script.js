@@ -434,7 +434,7 @@ function makeServerRequest() {
         username: username,
         score: snake.length,
         mapSize : mapSize
-    }    
+    } 
     let response = "";
     fetch("https://fritzler.ru:8000?mapSize=12", {
         method: "POST",

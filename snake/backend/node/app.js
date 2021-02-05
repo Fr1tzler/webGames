@@ -40,12 +40,12 @@ https.createServer(options, (request, response) => {
                 body += chunk.toString();
             })
             request.on("end", () => {
-                let requestParams = parse(body);
+                let requestParams = JSON.parse(body);
                 let username = requestParams.username;
                 let score = requestParams.score;
                 let mapSize = requestParams.mapSize;
                 pushToDb(username, score, mapSize);
-                response.end(JSON.stringify(getTopFromDb(mapSize)));
+                getTopFromDb(mapSize, response);
             })
             break;
         default:
@@ -65,7 +65,7 @@ function pushToDb(username, score, mapSize) {
     return;
 }
 
-function getTopFromDb(mapSize) {
+function getTopFromDb(mapSize, response) {
     let dbQuery = `SELECT playerName, score FROM records${mapSize}x${mapSize} ORDER BY score DESC;`;
     let result = [];
     dbConnection.query(dbQuery, (errors, queryResult, fields) => {
@@ -77,7 +77,7 @@ function getTopFromDb(mapSize) {
                 'username' : username, 
                 "score" : score
             });
+            response.end(JSON.stringify(result));
         }
     });
-    return result;
 }
