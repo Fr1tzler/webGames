@@ -16,9 +16,18 @@ Spacemodule.prototype.throttle = function() {
     if (this.fuelRemaining <= 0) {
         return;
     }
-    console.log(this.speed, this.fuelRemaining);
-    this.speed[1] -= 0.1;
+    let dvX = Math.sin(this.rotation) * 0.2;
+    let dvY = Math.cos(this.rotation) * 0.2;
+    this.speed[0] -= dvX;
+    this.speed[1] -= dvY;
+    console.log(dvX, dvY);
     this.fuelRemaining -= 0.1;
+}
+
+Spacemodule.prototype.rotate = function(toLeft) {
+    let rotSign = toLeft ? 1 : -1;
+    this.rotation += rotSign * 0.1;
+    console.log(this.rotation);
 }
 
 let canvas;
@@ -51,17 +60,29 @@ function mainloop() {
 function draw() {
     context.clearRect(0, 0, 1920, 1080);
     context.fillRect(spacemodule.position[0] - 5, spacemodule.position[1] - 5, 10, 10);
+    context.fillRect(0, 905, 1920, 5);
+
 }
 
 function updateModel() {
     spacemodule.speed[1] += 0.05;
     spacemodule.update();
+    if (spacemodule.position[1] > 900) {
+        spacemodule.position[1] = 900;
+        spacemodule.speed[1] = 0;
+    }
 }
 
 document.addEventListener("keydown", function (event) {
     switch (event.code) {
         case "ArrowUp":
             spacemodule.throttle();
+            break;
+        case "ArrowLeft":
+            spacemodule.rotate(true);
+            break;
+        case "ArrowRight":
+            spacemodule.rotate(false);
             break;
         default:
             break;
