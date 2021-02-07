@@ -10,6 +10,7 @@ const deltaTimeBase = 200;
 let deltaTime;
 let gamePaused = false;
 let username = localStorage.getItem("name");
+let tetraminoFalling = false;
 
 // view functions
 
@@ -57,7 +58,7 @@ function hideGameStartScreen() {
     document.getElementById("gameStart").style.visibility = "hidden";
 }
 
-function generateTilesOfField() {
+function generateTilesOnField() {
     for (let rowId = 0; rowId < mapHeight; rowId++) {
         let rowContainer = document.createElement("div");
         rowContainer.className = "rowContainer";
@@ -90,32 +91,31 @@ function shiftTileColor() {
 
 // user input handling functions
 
-// fix
 document.addEventListener("keydown", function (event) {
     switch (event.code) {
         case "ArrowDown":
             if (event.repeat) {
                 return;
             }
-            setDirectionDown();
+            pushTetraminoDown();
             break;
         case "ArrowUp":
             if (event.repeat) {
                 return;
             }
-            setDirectionUp();
+            rotateCurrentTetramino();
             break;
         case "ArrowLeft":
             if (event.repeat) {
                 return;
             }
-            setDirectionLeft();
+            pushTetraminoLeft();
             break;
         case "ArrowRight":
             if (event.repeat) {
                 return;
             }
-            setDirectionRight();
+            pushTetraminoRight();
             break;
         case "KeyP":
             if (event.repeat) {
@@ -128,60 +128,27 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
-// fix
 function enableControls() {
-    document.getElementById("btnUp").addEventListener("click", setDirectionUp);
-    document.getElementById("btnDown").addEventListener("click", setDirectionDown);
-    document.getElementById("btnLeft").addEventListener("click", setDirectionLeft);
-    document.getElementById("btnRight").addEventListener("click", setDirectionRight);
+    document.getElementById("btnUp").addEventListener("click", rotateCurrentTetramino);
+    document.getElementById("btnDown").addEventListener("click", pushTetraminoDown);
+    document.getElementById("btnLeft").addEventListener("click", pushTetraminoLeft);
+    document.getElementById("btnRight").addEventListener("click", pushTetraminoRight);
 }
 
-// fix
-function setDirectionUp() {
-    if (directionQueue[0] == "up" || direction == "down" || lastAdded == "down" || gamePaused) {
-        return;
-    }
-    if (directionQueue.length > 2) {
-        directionQueue.pop()
-    }
-    lastAdded = "up"
-    directionQueue.unshift("up");
+// TODO
+function rotateCurrentTetramino() {
 }
 
-// fix
-function setDirectionDown() {
-    if (directionQueue[0] == "down" || direction == "up" || lastAdded == "up" || gamePaused) {
-        return;
-    }
-    if (directionQueue.length > 2) {
-        directionQueue.pop()
-    }
-    lastAdded = "down"
-    directionQueue.unshift("down");
+// TODO
+function pushTetraminoDown() {
 }
 
-// fix
-function setDirectionLeft() {
-    if (directionQueue[0] == "left" || direction == "right" || lastAdded == "right" || gamePaused) {
-        return;
-    }
-    if (directionQueue.length > 2) {
-        directionQueue.pop()
-    }
-    lastAdded = "left"
-    directionQueue.unshift("left");
+// TODO
+function pushTetraminoLeft() {
 }
 
-// fix
-function setDirectionRight() {
-    if (directionQueue[0] == "right" || direction == "left" || lastAdded == "left" || gamePaused) {
-        return;
-    }
-    if (directionQueue.length > 2) {
-        directionQueue.pop()
-    }
-    lastAdded = "right"
-    directionQueue.unshift("right");
+// TODO
+function pushTetraminoRight() {
 }
 
 function pauseClickHandler() {
@@ -203,7 +170,7 @@ function pauseClickHandler() {
 
 document.addEventListener("DOMContentLoaded", init);
 
-// fix
+// TODO
 function init() {
     document.getElementById("startNewGame").addEventListener("click", () => {
         hideGameStartScreen();
@@ -222,7 +189,7 @@ function init() {
 
     enableControls();
     setButtonBlockVisibility(false);
-    generateTilesOfField();
+    generateTilesOnField();
     resizeEverything();
     shiftTileColor();
     showGameStartScreen();
@@ -242,13 +209,15 @@ function mainloop() {
     timer = setTimeout(mainloop, deltaTime);
 }
 
+// TODO
 function newGame() {
     document.getElementById("field").innerHTML = "";
     deltaTime = deltaTimeBase;
     map = generateMapModel();
+    score = 0;
     document.getElementById("score").innerText = `score ${score}`;
     gameEnd = false;
-    generateTilesOfField();
+    generateTilesOnField();
     shiftTileColor();
     resizeEverything();
     mainloop();
@@ -278,30 +247,23 @@ function generateMapModel() {
     return map;
 }
 
-// fix
+// TODO
 function updateState() {
-    
 }
 
 // server request functions
 
-// fix
 function requestLeaderboards() {
     let data = {
         username: username,
         score: score,
-        mapSize: mapSize
     }
-    let response = "";
-    fetch("https://fritzler.ru:8000?mapSize=12", {
+    fetch("https://fritzler.ru:8000", {
         method: "POST",
         body: JSON.stringify(data),
     })
         .then(response => {
-            return response.json();
-        })
-        .then(result => {
-            updateLeaderbords(result);
+            updateLeaderbords(response.json());
         });
 }
 
@@ -338,10 +300,6 @@ function resizeControls() {
         buttonBlockYPosition = window.innerHeight - Math.floor(maxYSize / 2);
     }
     buttonBlockXPosition = Math.floor(maxXSize / 2);
-    console.log(maxXSize);
-    console.log(maxYSize);
-    console.log(buttonBlockXPosition);
-    console.log(buttonBlockYPosition);
 
     let controlBlockSize = Math.floor(Math.min(maxXSize, maxYSize) / Math.sqrt(2));
     let buttonSize = Math.floor(controlBlockSize * 0.8 / 2);
@@ -359,7 +317,7 @@ function resizeControls() {
         button.style.height = `${buttonSize}px`;
         button.style.margin = `${buttonMargin}px`;
     }
-    
+
     let pauseButtonSize = Math.floor(Math.min(window.innerWidth, window.innerHeight) / 10);
     let offset = Math.floor(pauseButtonSize / 3);
     document.getElementById("pauseButton").width = `${pauseButtonSize}px`;
@@ -370,7 +328,6 @@ function resizeControls() {
     document.getElementById("pauseButton").style.right = `${offset}px`;
 }
 
-// fix
 function resizeMap() {
     let squareSize = Math.min(window.innerHeight, window.innerWidth) * 0.9;
     let rowWidth = Math.ceil(squareSize / mapHeight * mapWidth);
