@@ -11,6 +11,43 @@ let deltaTime;
 let gamePaused = false;
 let username = localStorage.getItem("name");
 let tetraminoFalling = false;
+let currentTetramino = [];
+
+const tetraminoes = [
+    [
+        ['u', 'u', 'e'],
+        ['e', 'u', 'u']],
+    [
+        ['e', 'u', 'u'],
+        ['u', 'u', 'e']
+    ],
+    [
+        ['e', 'u', 'e'],
+        ['u', 'u', 'u']
+    ],
+    [
+        ['e', 'e', 'u'],
+        ['u', 'u', 'u']
+    ],
+    [
+        ['u', 'e', 'e'],
+        ['u', 'u', 'u']
+    ],
+    [
+        ['u', 'u', 'u', 'u']
+    ]
+]
+
+function rotateArray(twoDimArray) {
+    let result = [];
+    for (let newRowId = 0; newRowId < twoDimArray[0].length; newRowId++) {
+        result.push([]);
+        for (let newColId = twoDimArray.length - 1; newColId >= 0; newColId--) {
+            result[newRowId].push(twoDimArray[newColId][newRowId]);
+        }
+    }
+    return result;
+}
 
 // view functions
 
