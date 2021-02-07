@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris</title>
+    <link rel="shortcut icon" href="/images/favicon.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="field" id="field"></div>
+    <div class="pause" id="pause">
+        <div class="pauseTextContainer">
+            game paused
+        </div>
+    </div>
+    <div class="score" id="score">score: 3</div>
+    <div class="controlsContainer" id="btnBlock">
+        <div class="controlButton" id="btnUp"></div>
+        <div class="controlButton" id="btnRight"></div>
+        <div class="controlButton" id="btnLeft"></div>
+        <div class="controlButton" id="btnDown"></div>
+    </div>
+    <div class="gameMenuContainer" id="gameEnd">
+        <div class="gameMenu">
+            <h1>you lost</h1>
+            <h2>leaderboards:</h2>
+            <div class="leaderboardsContainer" id="leaderboardsContainer">
+                <table class="leaderboards" id="leadersTable">
+                </table>    
+            </div>
+           <div class="customButton" id="toGameStartMenu"> <h2>play new game?</h2></div>
+        </div>
+    </div>
+
+    <div class="gameMenuContainer" id="gameStart">
+        <div class="gameMenu">
+            <h1>New game</h1>
+            <div class="newGameOptions">
+                <div class="customButton sizeButton" id="size12">12x12</div>
+                <div class="customButton sizeButton" id="size18">18x18</div>
+                <div class="customButton sizeButton" id="size24">24x24</div>
+                <div class="customButton sizeButton" id="size32">32x32</div>
+            </div>
+            <br>
+            <textarea class="textField" id="usernameField" cols="30" rows="1">player_name</textarea>
+            <br>
+            <div class="customButton startButton" id="startNewGame">Start</div>
+        </div>
+    </div>
+    <img id="pauseButton" src="images/pause.png"></div>
+    
+</body>
+</html>

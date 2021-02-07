@@ -1,0 +1,224 @@
+@font-face {
+    font-family: 'Gardens CM';
+    src: url('fonts/CM_GARDEN_R.eot');
+    src: url('fonts/CM_GARDEN_R.eot?#iefix') format('embedded-opentype'),
+        url('fonts/CM_GARDEN_R.woff2') format('woff2'),
+        url('fonts/CM_GARDEN_R.woff') format('woff'),
+        url('fonts/CM_GARDEN_R.svg#CM_GARDEN_R') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    background-color: #555555;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    user-select: none;
+    font-family: 'Gardens CM', sans-serif;
+}
+
+.field {
+    overflow: hidden;
+    position: absolute;
+    align-self: center;
+    margin: auto;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.rowContainer {
+    position: relative;
+    width: 480px;
+    height: 40px;
+}
+
+.row {
+    position: absolute;
+    height: fit-content;
+    width: fit-content;
+
+}
+
+.tile {
+    float: left;
+    margin: 5px;
+    border-radius: 5px;
+    height: 30px;
+    width: 30px;
+    position: relative;
+    background-color: grey;
+    transition: all ease 0.1s;
+}
+
+.score {
+    font-size: xx-large;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-weight: bolder;
+}
+
+.pause {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: #000000aa;
+    opacity: 0;
+    transition: all ease 1s;
+}
+
+.pauseTextContainer {
+    top: 50%;
+    left: 50%;
+    position: relative;
+    color: white;
+    font-size: xx-large;
+    font-weight: bolder;
+    text-align: center;
+    transform: translate(-50%, -50%);
+}
+
+.gameMenuContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: #000000aa;
+    opacity: 0;
+    transition: all ease 1s;
+    visibility: hidden;
+}
+
+.gameMenu {
+    position: relative;
+    border-radius: 5px;
+    text-align: center;
+    background-color: #555555;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: max-content;
+    /* use width: min-content for mobile vertical */
+    height: fit-content;
+    
+    padding: 1%;
+    color: white;
+}
+
+.gameMenu h1 {
+    font-size: 40px;
+}
+
+.newGameOptions {
+    position: relative;
+    width: max-content;
+    margin: auto;
+}
+
+.customButton {
+    user-select: none;
+    background-color: rgb(108, 108, 108);
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    transition: 0.3s all ease;
+}
+
+.customButton:hover {
+    background-color: grey;
+}
+
+.sizeButton {
+    font-size: x-large;
+    width: max-content;
+    height: max-content;
+    text-align: center;
+}
+
+.startButton {
+    margin-top: 20px;
+    font-size: xx-large;
+    font-weight: bolder;
+}
+
+.controlsContainer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20vh;
+    height: 20vh;
+    transform: translate(-50%, -50%) rotate(45deg);
+    overflow: hidden;
+    opacity: 1;
+    visibility: visible;
+}
+
+.controlButton {
+    background-color: #666666;
+    position: relative;
+    float: left;
+    border-radius: 5px;
+    width: 8vh;
+    height: 8vh;
+    margin: 1vh;
+    transition: all ease 0.1s;
+}
+
+.controlButton:active {
+    background-color: white;
+}
+
+#pauseButton {
+    position: absolute;
+    visibility: visible;
+    width: 12vh;
+    height: 12vh;
+    top: 3vh;
+    right: 3vh;
+    color: white;
+}
+
+.leaderboardsContainer {
+    position: relative;
+    scrollbar-width: none;
+    width: 20vw;
+    height: 20vh;
+    overflow-y: scroll;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #444444;
+    margin: auto;
+    margin-bottom: 10%;
+}
+
+.leaderboards {
+    position: relative;
+    width: inherit;
+    margin: auto;
+    font-size: x-large;
+}
+
+.textField {
+    background-color: #333333;
+    color: white;
+    margin: auto;
+    font-size: x-large;
+    border: 0px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.leaderName {
+    text-align: left;
+}
+
+.leaderScore {
+    text-align: right;
+    color: orange;
+}
