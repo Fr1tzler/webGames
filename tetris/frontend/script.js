@@ -1,24 +1,18 @@
-const fruitTile = "f";
-const snakeTile = "s";
 const emptyTile = "e";
-let mapSize = 12;
-let snake = [[0, 0], [0, 1], [0, 2]];
-let direction = "right";
-let directionQueue = [];
-let fruitPosition = [0, 0];
+const usedTile = "u";
+let mapHeight = 20;
+let mapWidth = 12;
+let score = 0;
 let map = generateMapModel();
 let gameEnd = true;
 let timer;
-const deltaTimeBaseScalable = 150;
-const deltaTimeBaseStatic = 50;
+const deltaTimeBase = 200;
 let deltaTime;
 let gamePaused = false;
-let lastAdded = "";
 let username = localStorage.getItem("name");
 
 // view functions
 
-// fix
 function setButtonBlockVisibility(setOn) {
     let nextOpacity = 0;
     let nextVisibility = "hiiden";
@@ -36,7 +30,6 @@ function setButtonBlockVisibility(setOn) {
     }
 }
 
-// fix
 function showGameEndScreen() {
     if (isMobileDevice()) {
         setButtonBlockVisibility(false);
@@ -45,19 +38,16 @@ function showGameEndScreen() {
     document.getElementById("gameEnd").style.visibility = "visible";
 }
 
-// fix
 function hideGameEndScreen() {
     document.getElementById("gameEnd").style.opacity = 0;
     document.getElementById("gameEnd").style.visibility = "hidden";
 }
 
-// fix
 function showGameStartScreen() {
     document.getElementById("gameStart").style.opacity = 1;
     document.getElementById("gameStart").style.visibility = "visible";
 }
 
-// fix
 function hideGameStartScreen() {
     updateUsername();
     if (isMobileDevice()) {
@@ -67,9 +57,8 @@ function hideGameStartScreen() {
     document.getElementById("gameStart").style.visibility = "hidden";
 }
 
-// fix
 function generateTilesOfField() {
-    for (let rowId = 0; rowId < mapSize; rowId++) {
+    for (let rowId = 0; rowId < mapHeight; rowId++) {
         let rowContainer = document.createElement("div");
         rowContainer.className = "rowContainer";
         rowContainer.id = `rowContainer_${rowId}`;
@@ -79,7 +68,7 @@ function generateTilesOfField() {
         row.className = "row";
         row.id = `row_${rowId}`;
         rowContainer.appendChild(row);
-        for (let columnId = 0; columnId < mapSize; columnId++) {
+        for (let columnId = 0; columnId < mapWidth; columnId++) {
             let tile = document.createElement("div");
             tile.className = "tile";
             tile.id = `tile_${rowId}_${columnId}`;
@@ -88,37 +77,14 @@ function generateTilesOfField() {
     }
 }
 
-// fix
-function updateSizeButtonsColor(activeSize) {
-    let sizes = [12, 18, 24, 32];
-    for (let i = 0; i < sizes.length; i++) {
-        document.getElementById(`size${sizes[i]}`).style.backgroundColor = "rgb(108, 108, 108)";
-    }
-    document.getElementById(`size${activeSize}`).style.backgroundColor = "grey";
-}
-
-// fix
-function updateTileColor() {
-    let colorMap = []
-    for (let y = 0; y < mapSize; y++) {
-        colorMap.push([]);
-        for (let x = 0; x < mapSize; x++) {
-            colorMap[y].push("grey");
+function shiftTileColor() {
+    for (let rowId = mapHeight - 1; rowId > 0; rowId--) {
+        for (let columnId = 0; columnId < mapWidth; columnId++) {
+            document.getElementById(`tile_${rowId}_${columnId}`).style.backgroundColor = document.getElementById(`tile_${rowId - 1}_${columnId}`).style.backgroundColor;
         }
     }
-    for (let i = 0; i < mapSize; i++) {
-        colorMap[i][fruitPosition[1]] = "rgb(108, 108, 108)";
-        colorMap[fruitPosition[0]][i] = "rgb(108, 108, 108)";
-    }
-    colorMap[fruitPosition[0]][fruitPosition[1]] = "orange";
-    document.getElementById(`tile_${fruitPosition[0]}_${fruitPosition[1]}`).style.backgroundColor = "orange";
-    for (let i = 0; i < snake.length; i++) {
-        colorMap[snake[i][0]][snake[i][1]] = getSnakeTileColor(snake.length, i);
-    }
-    for (let y = 0; y < mapSize; y++) {
-        for (let x = 0; x < mapSize; x++) {
-            document.getElementById(`tile_${y}_${x}`).style.backgroundColor = colorMap[y][x];
-        }
+    for (let columnId = 0; columnId < mapWidth; columnId++) {
+        document.getElementById(`tile_0_${columnId}`).style.backgroundColor = "grey";
     }
 }
 
@@ -161,27 +127,6 @@ document.addEventListener("keydown", function (event) {
             break;
     }
 });
-
-// fix
-function initSizeButtons() {
-    document.getElementById("size12").addEventListener("click", function () {
-        mapSize = 12;
-        updateSizeButtonsColor(12);
-    });
-    document.getElementById("size18").addEventListener("click", function () {
-        mapSize = 18;
-        updateSizeButtonsColor(18);
-    });
-    document.getElementById("size24").addEventListener("click", function () {
-        mapSize = 24;
-        updateSizeButtonsColor(24);
-    });
-    document.getElementById("size32").addEventListener("click", function () {
-        mapSize = 32;
-        updateSizeButtonsColor(32);
-    });
-    updateSizeButtonsColor(12);
-}
 
 // fix
 function enableControls() {
@@ -239,7 +184,6 @@ function setDirectionRight() {
     directionQueue.unshift("right");
 }
 
-// fix
 function pauseClickHandler() {
     if (gameEnd) {
         return;
@@ -261,7 +205,6 @@ document.addEventListener("DOMContentLoaded", init);
 
 // fix
 function init() {
-    initSizeButtons();
     document.getElementById("startNewGame").addEventListener("click", () => {
         hideGameStartScreen();
         newGame();
@@ -281,11 +224,10 @@ function init() {
     setButtonBlockVisibility(false);
     generateTilesOfField();
     resizeEverything();
-    updateTileColor();
+    shiftTileColor();
     showGameStartScreen();
 }
 
-// fix
 function mainloop() {
     if (gameEnd) {
         return;
@@ -295,28 +237,23 @@ function mainloop() {
         return;
     }
     updateState();
-    updateTileColor();
-    deltaTime = deltaTimeBaseScalable * (Math.pow(mapSize, 2) - snake.length) / Math.pow(mapSize, 2) + deltaTimeBaseStatic;
+    shiftTileColor();
+    deltaTime = deltaTimeBase / Math.log10(score / 10);
     timer = setTimeout(mainloop, deltaTime);
 }
 
-// fix
 function newGame() {
     document.getElementById("field").innerHTML = "";
-    direction = "right";
-    directionQueue = [];
-    snake = [[0, 0], [0, 1], [0, 2]];
-    deltaTime = deltaTimeBaseScalable + deltaTimeBaseStatic;
+    deltaTime = deltaTimeBase;
     map = generateMapModel();
-    document.getElementById("score").innerText = `score ${snake.length}`;
+    document.getElementById("score").innerText = `score ${score}`;
     gameEnd = false;
     generateTilesOfField();
-    updateTileColor();
+    shiftTileColor();
     resizeEverything();
     mainloop();
 }
 
-// fix
 function updateLeaderbords(leaderboards) {
     let table = document.getElementById("leadersTable");
     table.innerHTML = "";
@@ -330,80 +267,20 @@ function updateLeaderbords(leaderboards) {
     }
 }
 
-// fix
 function generateMapModel() {
     let map = []
-    for (let y = 0; y < mapSize; y++) {
+    for (let y = 0; y < mapHeight; y++) {
         map.push([]);
-        for (let x = 0; x < mapSize; x++) {
+        for (let x = 0; x < mapWidth; x++) {
             map[y].push(emptyTile);
         }
     }
-    for (var snakeTileId = 0; snakeTileId < snake.length; snakeTileId++) {
-        map[snake[snakeTileId][0]][snake[snakeTileId][1]] = snakeTile
-    }
-    setNextFruitOnMap(map);
-
     return map;
 }
 
 // fix
 function updateState() {
-    let snakeHeadY = snake[snake.length - 1][0];
-    let snakeHeadX = snake[snake.length - 1][1];
-    if (directionQueue.length != 0) {
-        direction = directionQueue.pop();
-    }
-    switch (direction) {
-        case "right":
-            snakeHeadX += 1;
-            break;
-        case "left":
-            snakeHeadX -= 1;
-            break;
-        case "up":
-            snakeHeadY -= 1;
-            break;
-        case "down":
-            snakeHeadY += 1;
-            break;
-    }
-    snakeHeadX = (snakeHeadX + mapSize) % mapSize;
-    snakeHeadY = (snakeHeadY + mapSize) % mapSize;
-    switch (map[snakeHeadY][snakeHeadX]) {
-        case fruitTile:
-            map[snakeHeadY][snakeHeadX] = snakeTile;
-            snake.push([snakeHeadY, snakeHeadX]);
-            map = setNextFruitOnMap(map);
-            document.getElementById("score").innerText = `score: ${snake.length}`;
-            break;
-        case snakeTile:
-            gameEnd = true;
-            requestLeaderboards();
-            showGameEndScreen();
-            break;
-        case emptyTile:
-            map[snakeHeadY][snakeHeadX] = snakeTile;
-            snake.push([snakeHeadY, snakeHeadX]);
-            let snakeEnd = snake.shift();
-            map[snakeEnd[0]][snakeEnd[1]] = emptyTile;
-            break;
-    }
-}
-
-// fix
-function setNextFruitOnMap(map) {
-    while (true) {
-        let fruitY = getRandomInt(mapSize);
-        let fruitX = getRandomInt(mapSize);
-        fruitPosition[0] = fruitY;
-        fruitPosition[1] = fruitX;
-        if (map[fruitY][fruitX] == emptyTile) {
-            map[fruitY][fruitX] = fruitTile;
-            break;
-        }
-    }
-    return map;
+    
 }
 
 // server request functions
@@ -412,7 +289,7 @@ function setNextFruitOnMap(map) {
 function requestLeaderboards() {
     let data = {
         username: username,
-        score: snake.length,
+        score: score,
         mapSize: mapSize
     }
     let response = "";
@@ -428,7 +305,6 @@ function requestLeaderboards() {
         });
 }
 
-// fix
 function updateUsername() {
     username = document.getElementById("usernameField").value;
     localStorage["name"] = username;
@@ -438,7 +314,6 @@ function updateUsername() {
 
 window.addEventListener("resize", resizeEverything);
 
-// fix
 function resizeEverything() {
     resizeMap();
     resizeControls();
@@ -448,7 +323,6 @@ function resizeEverything() {
     }
 }
 
-// fix
 function resizeControls() {
     let maxXSize = 0;
     let maxYSize = 0;
@@ -499,29 +373,28 @@ function resizeControls() {
 // fix
 function resizeMap() {
     let squareSize = Math.min(window.innerHeight, window.innerWidth) * 0.9;
+    let rowWidth = Math.ceil(squareSize / mapHeight * mapWidth);
     document.getElementById("field").style.height = `${squareSize}px`;
-    document.getElementById("field").style.width = `${squareSize}px`;
-    for (let rowId = 0; rowId < mapSize; rowId++) {
-        document.getElementById(`rowContainer_${rowId}`).style.width = Math.floor(squareSize) + "px";
-        document.getElementById(`rowContainer_${rowId}`).style.height = `${Math.floor(squareSize / mapSize)}px`;
+    document.getElementById("field").style.width = `${rowWidth}px`;
+    for (let rowId = 0; rowId < mapHeight; rowId++) {
+        document.getElementById(`rowContainer_${rowId}`).style.width = `${rowWidth}px`;
+        document.getElementById(`rowContainer_${rowId}`).style.height = `${Math.floor(squareSize / mapHeight)}px`;
         document.getElementById(`row_${rowId}`).style.width = `${Math.floor(squareSize)}px`;
-        document.getElementById(`row_${rowId}`).style.height = `${Math.floor(squareSize / mapSize)}px`;
-        for (let columnId = 0; columnId < mapSize; columnId++) {
+        document.getElementById(`row_${rowId}`).style.height = `${Math.floor(squareSize / mapHeight)}px`;
+        for (let columnId = 0; columnId < mapWidth; columnId++) {
             tile = document.getElementById(`tile_${rowId}_${columnId}`);
-            tile.style.width = `${Math.floor(squareSize / mapSize * 0.9)}px`;
-            tile.style.height = `${Math.floor(squareSize / mapSize * 0.9)}px`;
-            tile.style.margin = `${Math.floor(squareSize / mapSize * 0.05)}px`;
+            tile.style.width = `${Math.floor(squareSize / mapHeight * 0.9)}px`;
+            tile.style.height = `${Math.floor(squareSize / mapHeight * 0.9)}px`;
+            tile.style.margin = `${Math.floor(squareSize / mapHeight * 0.05)}px`;
         }
     }
     document.getElementById("field").style.top = `${Math.floor(squareSize * 0.05)}px`;
 }
 
-// fix
 function resizeLeaderboards() {
     document.getElementById("leaderboardsContainer").style.width = "80vw";
 }
 
-// fix
 function relocateScore() {
     document.getElementById("score").style.top = `${window.innerWidth}px`;
 }
