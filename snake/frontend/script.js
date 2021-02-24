@@ -445,10 +445,6 @@ function resizeControls() {
         buttonBlockYPosition = window.innerHeight - Math.floor(maxYSize / 2);
     }
     buttonBlockXPosition = Math.floor(maxXSize / 2);
-    console.log(maxXSize);
-    console.log(maxYSize);
-    console.log(buttonBlockXPosition);
-    console.log(buttonBlockYPosition);
 
     let controlBlockSize = Math.floor(Math.min(maxXSize, maxYSize) / Math.sqrt(2));
     let buttonSize = Math.floor(controlBlockSize * 0.8 / 2);
