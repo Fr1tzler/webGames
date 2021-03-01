@@ -1,31 +1,10 @@
 let mapSize = 12;
 let map = generateMapModel();
 let gameEnd = true;
-let gamePaused = false;
 
 // view functions
 
-function setButtonBlockVisibility(setOn) {
-    let nextOpacity = 0;
-    let nextVisibility = "hiiden";
-    if (setOn) {
-        nextOpacity = 1;
-        nextVisibility = "visible";
-    }
-    document.getElementById("btnBlock").opacity = 0;
-    document.getElementById("btnBlock").visibility = "hidden";
-    let controlButtons = document.getElementsByClassName("controlButton");
-    for (let i = 0; i < controlButtons.length; i++) {
-        let button = controlButtons[i];
-        button.style.opacity = nextOpacity;
-        button.style.visibility = nextVisibility;
-    }
-}
-
 function showGameEndScreen() {
-    if (isMobileDevice()) {
-        setButtonBlockVisibility(false);
-    }
     document.getElementById("gameEnd").style.opacity = 1;
     document.getElementById("gameEnd").style.visibility = "visible";
 }
@@ -41,10 +20,6 @@ function showGameStartScreen() {
 }
 
 function hideGameStartScreen() {
-    updateUsername();
-    if (isMobileDevice()) {
-        setButtonBlockVisibility(true);
-    }
     document.getElementById("gameStart").style.opacity = 0;
     document.getElementById("gameStart").style.visibility = "hidden";
 }
@@ -109,21 +84,12 @@ function init() {
         hideGameStartScreen();
         newGame();
     });
-    if (!isMobileDevice()) {
-        document.getElementById("btnBlock").style.visibility = "hidden";
-        document.getElementById("pauseButton").style.visibility = "hidden";
-    } else {
-        document.getElementById("pauseButton").addEventListener("click", pauseClickHandler);
-    }
     document.getElementById("toGameStartMenu").addEventListener("click", () => {
         hideGameEndScreen();
         showGameStartScreen();
     })
-
-    enableControls();
-    setButtonBlockVisibility(false);
     generateTilesOnField();
-    resizeEverything();
+    resizeMap();
     showGameStartScreen();
 }
 
@@ -132,70 +98,27 @@ function newGame() {
     map = generateMapModel();
     gameEnd = false;
     generateTilesOnField();
-    updateTileColor();
-    resizeEverything();
-    mainloop();
+    resizeMap();
 }
 
 function generateMapModel() {
-    let map = []
+    let map = [];
+    for (let x = 0; x < mapSize; x++) {
+        map.push([]);
+        for (let y = 0; y < mapSize; y++)
+            map[x].push(0);
+    }
+    return map;
+}
+
+function setBlackTiles(map) {
+    // do nothing
     return map;
 }
 
 // window resize functions
 
-window.addEventListener("resize", resizeEverything);
-
-function resizeEverything() {
-    resizeMap();
-    resizeControls();
-    if (window.innerHeight > window.innerWidth) {
-        resizeLeaderboards();
-        relocateScore();
-    }
-}
-
-function resizeControls() {
-    let maxXSize = 0;
-    let maxYSize = 0;
-    let buttonBlockXPosition = 0;
-    let buttonBlockYPosition = 0;
-    if (window.innerWidth > window.innerHeight) {
-        maxXSize = Math.floor((window.innerWidth - window.innerHeight) / 2);
-        maxYSize = Math.floor(window.innerHeight);
-        buttonBlockYPosition = Math.floor(maxYSize / 2);
-    } else {
-        maxXSize = Math.floor(window.innerWidth);
-        maxYSize = Math.floor(window.innerHeight - window.innerWidth);
-        buttonBlockYPosition = window.innerHeight - Math.floor(maxYSize / 2);
-    }
-    buttonBlockXPosition = Math.floor(maxXSize / 2);
-
-    let controlBlockSize = Math.floor(Math.min(maxXSize, maxYSize) / Math.sqrt(2));
-    let buttonSize = Math.floor(controlBlockSize * 0.8 / 2);
-    let buttonMargin = Math.floor(controlBlockSize * 0.1 / 2);
-    let buttonBlock = document.getElementById("btnBlock");
-    buttonBlock.style.top = `${buttonBlockYPosition}px`;
-    buttonBlock.style.left = `${buttonBlockXPosition}px`;
-    buttonBlock.style.height = `${controlBlockSize}px`;
-    buttonBlock.style.width = `${controlBlockSize}px`;
-
-    let controlButtons = document.getElementsByClassName("controlButton");
-    for (let i = 0; i < controlButtons.length; i++) {
-        controlButtons[i].style.width = `${buttonSize}px`;
-        controlButtons[i].style.height = `${buttonSize}px`;
-        controlButtons[i].style.margin = `${buttonMargin}px`;
-    }
-    
-    let pauseButtonSize = Math.floor(Math.min(window.innerWidth, window.innerHeight) / 10);
-    let offset = Math.floor(pauseButtonSize / 3);
-    document.getElementById("pauseButton").width = `${pauseButtonSize}px`;
-    document.getElementById("pauseButton").height = `${pauseButtonSize}px`;
-    document.getElementById("pauseButton").style.width = `${pauseButtonSize}px`;
-    document.getElementById("pauseButton").style.height = `${pauseButtonSize}px`;
-    document.getElementById("pauseButton").style.top = `${offset}px`;
-    document.getElementById("pauseButton").style.right = `${offset}px`;
-}
+window.addEventListener("resize", resizeMap);
 
 function resizeMap() {
     let squareSize = Math.min(window.innerHeight, window.innerWidth) * 0.9;
